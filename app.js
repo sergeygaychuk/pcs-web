@@ -116,7 +116,9 @@ app.post('/devices/:device', devices.update);
 app.post('/devices', devices.create);
 app.get('/devices/:device/setpoints', systems.setpoints);
 
+app.param('state', states.load);
 app.get('/devices/:device/states', states.index);
+app.get('/devices/:device/states/:state', states.show);
 
 app.param('site', sites.load);
 app.get('/sites', sites.index);

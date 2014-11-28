@@ -113,6 +113,40 @@ describe("states", function() {
         });
       });
     });
+
+    describe("#show", function() {
+      var state = null;
+      beforeEach(function(done) {
+        browser.visit(url + "/#/devices/" + knownDevice._id + "/states", function() {
+          expect(browser.url).toEqual(url + '/#/devices/' + knownDevice._id + "/states");
+          var table = browser.queryAll("table.tp-data > tbody > tr");
+          expect(table.length).toEqual(25);
+          browser.clickLink(table[0], function() {
+            State.find({device: knownDevice._id}, "_id stamp outputs").
+              sort({ stamp: -1 }).limit(1).
+              exec(function(err, states) {
+                expect(browser.url).toEqual(url + '/#/devices/' + knownDevice._id + "/states/" + states[0]._id);
+                state = states[0];
+                done();
+            });
+          });
+        });
+      });
+
+      it("should show device name", function(done) {
+        expect(browser.text("label[id='lblDevice']")).toEqual("Контроллер");
+        expect(browser.text("a[href='#/devices/" + knownDevice._id + "']")).toEqual(knownDevice.name);
+        done();
+      });
+
+      it("should show outputs", function(done) {
+        for (var key in state.outputs) {
+          expect(browser.text("label[id='" + key + "']")).toEqual(key);
+          expect(browser.text("p[id='" + key + "txt']")).toEqual(state.outputs[key].toString());
+        }
+        done();
+      });
+    });
   });
 });
 

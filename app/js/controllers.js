@@ -12,7 +12,7 @@ function loadDeviceState($scope, deviceId) {
   /*$scope.stateStream = new EventSource('/devices/' + deviceId
       + '/states?stream=1&interval=10');*/
   $scope.state = { outputs: {} };
- /* $scope.stateStream.addEventListener('message', function (e) {
+  /*$scope.stateStream.addEventListener('message', function (e) {
     $scope.$apply(function () {
       console.log("LoadDeviceState", e);
       if (e.data !== "undefined") {
@@ -84,9 +84,9 @@ angular.module('pcs.controllers', [])
           });
         }
   }])
-  .controller('DeviceCtrl', ['$scope', '$routeParams', 'Device', 'State',
+  .controller('DeviceCtrl', ['$scope', '$routeParams', '$location', 'Device', 'State',
       'Setpoints',
-      function($scope, $routeParams, Device, State, Setpoints) {
+      function($scope, $routeParams, $location, Device, State, Setpoints) {
         $scope.page(1, 1, 0);
         $scope.setNewURL('#/devices/new');
         $scope.device = Device.get({ deviceId: $routeParams.deviceId }, function () {
@@ -115,11 +115,19 @@ angular.module('pcs.controllers', [])
           $scope.page(page, 25, count);
         });
   }])
+  .controller('StateCtrl', ['$scope', '$routeParams', '$location', 'Device', 'State',
+      function($scope, $routeParams, $location, Device, State) {
+        $scope.page(1, 1, 0);
+        $scope.setNewURL(null);
+        $scope.device = Device.get({ deviceId: $routeParams.deviceId });
+        $scope.state = State.get({ deviceId: $routeParams.deviceId, stateId: $routeParams.stateId });
+  }])
   .controller('StatesCtrl', ['$scope', '$routeParams', '$location', 'State', 'Device',
       function($scope, $routeParams, $location, State, Device) {
         var page = Number($location.search().page) || 1;
         $scope.setNewURL(null);
         $scope.show = function(id) {
+          $location.path("/devices/" + $routeParams.deviceId + "/states/" + id);
         };
         $scope.device = Device.get({ deviceId: $routeParams.deviceId });
         $scope.states = State.query({ page: page, deviceId: $routeParams.deviceId }, function () {
@@ -229,9 +237,9 @@ angular.module('pcs.controllers', [])
           });
         }
   }])
-  .controller('SystemCtrl', ['$scope', '$routeParams', 'Site', 'System',
+  .controller('SystemCtrl', ['$scope', '$routeParams', '$location', 'Site', 'System',
       'Device', 'State',
-      function($scope, $routeParams, Site, System, Device, State) {
+      function($scope, $routeParams, $location, Site, System, Device, State) {
         $scope.device = {};
         $scope.state = { outputs: {} };
         $scope.n = {};

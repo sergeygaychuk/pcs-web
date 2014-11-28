@@ -31,8 +31,14 @@ var deviceAttrs = {
   name: "unknown device",
 };
 
+var stateAttrs = {
+  stamp: new Date(),
+  outputs: {m1: 10, m2: 20},
+  device: null,
+};
+
 describe('State\'s routes', function() {
-  var operator, admin, device, utils;
+  var operator, admin, device, utils, state;
   beforeEach(function(done) {
     (new User(operatorAttrs)).save(function(err, newUser) {
       operator = newUser;
@@ -40,9 +46,116 @@ describe('State\'s routes', function() {
         admin = newAdmin;
         (new Device(deviceAttrs)).save(function(err, newDevice) {
           device = newDevice;
-          utils = require('./_controller_util')(admin, operator);
-          return done();
+          stateAttrs.device = device._id;
+          (new State(stateAttrs)).save(function(err, newState) {
+            state = newState;
+            utils = require('./_controller_util')(admin, operator);
+            return done();
+          });
         });
+      });
+    });
+  });
+
+  describe("#load", function() {
+    it("should find by id and assign state to req", function(done) {
+      var req = { },
+      id = state._id;
+
+      Routes.load(req, {}, function() {
+        expect(req.state.toJSON()).toEqual(state.toJSON());
+        done();
+      }, id);
+    });
+
+    it("should respond with not found code", function(done) {
+      var res = {
+        send: function(code) {
+          expect(code).toEqual(404);
+          done();
+        }
+      };
+      Routes.load({}, res, null, 0);
+    });
+  });
+
+  describe("#show", function() {
+    it("should allow access for authorized users", function(done) {
+      var req = { session: {} },
+      res = { redirect: function(url) {
+        expect(url).toEqual("/signin");
+        done();
+      }};
+      utils.executer(Routes.show.slice(0), req, res);
+    });
+
+    describe("when operator logged in", function() {
+      var req;
+
+      beforeEach(function() {
+        req = utils.operatorRequest();
+      });
+
+      it("should return not found if state is not exist", function(done) {
+        var res = {
+          locals: {},
+          send: function(code) {
+            expect(code).toEqual(404);
+            done();
+          },
+        };
+        utils.executer(Routes.show.slice(0), req, res);
+      });
+
+
+      it("should return only accessible fields", function(done) {
+        var res = {
+          locals: {},
+          json_ng: function(st) {
+            expect(Object.keys(st)).toEqual(['_id', 'device', 'stamp', 'outputs']);
+            expect(st._id).toEqual(state._id);
+            expect(st.name).toEqual(state.name);
+            done();
+          },
+        };
+        req.state = state;
+        req.state.some_field = true;
+        utils.executer(Routes.show.slice(0), req, res);
+      });
+    });
+
+    describe("when administrator logged in", function() {
+      var req;
+
+      beforeEach(function() {
+        req = utils.adminRequest();
+      });
+
+      it("should return not found if state is not exist", function(done) {
+        var res = {
+          locals: {},
+          send: function(code) {
+            expect(code).toEqual(404);
+            done();
+          },
+        };
+        utils.executer(Routes.show.slice(0), req, res);
+      });
+
+
+      it("should return only accessible fields", function(done) {
+        var res = {
+          locals: {},
+          json_ng: function(st) {
+            expect(Object.keys(st)).toEqual(['_id', 'device', 'stamp', 'outputs']);
+            expect(st._id).toEqual(state._id);
+            expect(st.name).toEqual(state.name);
+            done();
+          },
+        };
+        req.state = state;
+        req.state.some_field = true;
+        utils.executer(Routes.show.slice(0), req, res);
       });
     });
   });
@@ -109,7 +222,7 @@ describe('State\'s routes', function() {
           locals: {},
           json_ng: function(states) {
             expect(states.length).toEqual(26);
-            expect(states[25].count).toEqual(51);
+            expect(states[25].count).toEqual(52);
             done();
           },
         };
@@ -145,7 +258,7 @@ describe('State\'s routes', function() {
         res = {
           locals: {},
           json_ng: function(states) {
-            var fetched = states.slice(0, 1).map(function(item) {
+            var fetched = states.slice(0, 2).map(function(item) {
               return item._id.toString();
             });
             expect(fetched).toEqual(original);
@@ -189,7 +302,7 @@ describe('State\'s routes', function() {
         res = {
           locals: {},
           json_ng: function(states) {
-            var fetched = states.slice(0, 1).map(function(item) {
+            var fetched = states.slice(0, 2).map(function(item) {
               return item._id.toString();
             });
             expect(fetched).toEqual(original);

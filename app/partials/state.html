@@ -1,0 +1,21 @@
+<div class="row tp-user">
+  <form name="stateForm" accept-charset="UTF-8" class="form-horizontal">
+    <div class="form-group">
+      <label id="lblDevice" class="control-label col-sm-3">Контроллер</label>
+      <div class="col-sm-5" ng-if="!!state.device">
+        <label class="control-label">
+          <a href="{{'#/devices/' + state.device}}">{{device.name}}</a>
+        </label>
+      </div>
+    </div>
+    <div class="form-group" ng-repeat="(o, value) in state.outputs">
+      <label id="{{o}}" class="control-label col-sm-3">{{o}}</label>
+      <div class="col-sm-5">
+        <p id="{{o}}txt" class="form-control-static">
+          {{value}}
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+

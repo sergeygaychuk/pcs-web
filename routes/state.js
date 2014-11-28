@@ -174,4 +174,27 @@ function indexStates(req, res) {
 
 module.exports.index = [ auth.authenticate,
                          indexStates];
+
+module.exports.load = function (req, res, next, id) {
+  State.findOne({ _id: id }, function (err, state) {
+    if (err) {
+      return res.send(404);
+    }
+    req.state = state;
+    next();
+  })
+}
+
+function showState(req, res) {
+  if (!req.state)
+    return res.send(404);
+  var state = {};
+  exportFields.split(' ').forEach(function (f) {
+    state[f] = req.state[f];
+  });
+  res.json_ng(state);
+}
+
+module.exports.show = [ auth.authenticate,
+                         showState];
 // vim:ts=2 sts=2 sw=2 et:

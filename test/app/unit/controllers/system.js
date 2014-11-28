@@ -270,7 +270,6 @@ describe("Device Controllers", function() {
         setpoints: {a1: 5}
       });
       httpBackend.expectGET('/sites/2').respond({_id: 2, name: "site"});
-      //httpBackend.expectGET('/devices/3').respond({_id: 3, name: "device"});
     }));
 
     it("should call page with params", function() {
@@ -309,7 +308,6 @@ describe("Device Controllers", function() {
       httpBackend.flush();
       expect(scope.statesURL).toEqual("#/devices/3/states");
     });
-
 
     it("should define n", function() {
       controller('SystemCtrl', { $scope: scope, $routeParams: routeParams });

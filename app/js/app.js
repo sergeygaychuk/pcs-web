@@ -13,6 +13,7 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/devices/new', {templateUrl: 'partials/device.html', controller: 'NewDeviceCtrl'});
   $routeProvider.when('/devices/:deviceId', {templateUrl: 'partials/device.html', controller: 'DeviceCtrl'});
   $routeProvider.when('/devices/:deviceId/states', {templateUrl: 'partials/states.html', controller: 'StatesCtrl'});
+  $routeProvider.when('/devices/:deviceId/states/:stateId', {templateUrl: 'partials/state.html', controller: 'StateCtrl'});
   $routeProvider.when('/devices', {templateUrl: 'partials/devices.html', controller: 'DevicesCtrl'});
   $routeProvider.when('/sites/:siteId/systems/new', {templateUrl: 'partials/system.html', controller: 'NewSystemCtrl'});
   $routeProvider.when('/sites/:siteId/systems/:systemId', {templateUrl: 'partials/system.html', controller: 'SystemCtrl'});
