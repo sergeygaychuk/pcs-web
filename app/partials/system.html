@@ -37,13 +37,15 @@
       <div class="form-group">
         <label for="date" class="control-label col-sm-4">Состояние</label>
         <div class="col-sm-8">
+          <a class="btn btn-sm btn-warning" ng-href="{{statesURL}}" class="control-label call-sm-4" ng-if="system.device">Архив</a>
           <p class="form-control-static" id="date">
             {{moment(state.stamp).calendar()}}
           </p>
         </div>
       </div>
       <div class="form-group" ng-repeat="o in system.outputs">
-        <label for="{{o}}" class="control-label col-sm-4">{{o}}</label>
+        <label for="{{o}}" class="control-label col-sm-4" ng-if="!system.device">{{o}}</label>
+        <a ng-href="{{statesURL + '?output=' + o}}" class="control-label col-sm-4" ng-if="system.device">{{o}}</a>
         <div class="col-sm-6">
           <p class="form-control-static" ng-if="state.outputs[o] != undefined">
             {{state.outputs[o]}}

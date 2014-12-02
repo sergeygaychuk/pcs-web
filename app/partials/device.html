@@ -20,13 +20,15 @@
       <div class="form-group">
         <label for="date" class="control-label col-sm-4">Состояние</label>
         <div class="col-sm-8">
+          <a class="btn btn-sm btn-warning" ng-href="{{statesURL}}" class="control-label call-sm-4" ng-if="device._id">Архив</a>
           <p class="form-control-static" id="date">
             {{moment(state.stamp).calendar()}}
           </p>
         </div>
       </div>
       <div class="form-group" ng-repeat="(key, value) in state.outputs">
-        <label for="{{key}}" class="control-label col-sm-4">{{key}}</label>
+        <label for="{{key}}" class="control-label col-sm-4" ng-if="!device._id">{{key}}</label>
+        <a ng-href="{{statesURL + '?output=' + key}}" class="control-label col-sm-4" ng-if="device._id">{{key}}</a>
         <div class="col-sm-8">
           <p class="form-control-static" id="{{key}}">
             {{value}}

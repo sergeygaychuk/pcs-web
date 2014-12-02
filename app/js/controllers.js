@@ -90,6 +90,7 @@ angular.module('pcs.controllers', [])
         $scope.page(1, 1, 0);
         $scope.setNewURL('#/devices/new');
         $scope.device = Device.get({ deviceId: $routeParams.deviceId }, function () {
+          $scope.statesURL = "#/devices/" + $scope.device._id + "/states";
         });
         $scope.setpoints = Setpoints.get({ deviceId: $routeParams.deviceId }, function () {
         });
@@ -111,6 +112,19 @@ angular.module('pcs.controllers', [])
         $scope.devices = Device.query({page: page}, function () {
           var len = $scope.devices.length - 1;
           var count = $scope.devices.splice(len)[0].count;
+          $scope.page(page, 25, count);
+        });
+  }])
+  .controller('StatesCtrl', ['$scope', '$routeParams', '$location', 'State', 'Device',
+      function($scope, $routeParams, $location, State, Device) {
+        var page = Number($location.search().page) || 1;
+        $scope.setNewURL(null);
+        $scope.show = function(id) {
+        };
+        $scope.device = Device.get({ deviceId: $routeParams.deviceId });
+        $scope.states = State.query({ page: page, deviceId: $routeParams.deviceId }, function () {
+          var len = $scope.states.length - 1;
+          var count = $scope.states.splice(len)[0].count;
           $scope.page(page, 25, count);
         });
   }])
@@ -225,6 +239,7 @@ angular.module('pcs.controllers', [])
         $scope.setNewURL(null);
         $scope.system = System.get({ siteId: $routeParams.siteId,
           systemId: $routeParams.systemId }, function () {
+            $scope.statesURL = "#/devices/" + $scope.system.device + "/states";
             $scope.device = Device.get({ deviceId: $scope.system.device }, function () {
               $scope.n.deviceName = $scope.device.name;
             });

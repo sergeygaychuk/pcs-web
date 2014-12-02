@@ -22,8 +22,15 @@ angular.module('pcs.services', ['ngResource'])
       }])
   .factory('State', ['$resource',
       function ($resource) {
-        return $resource('/devices/:deviceId/states/:stateId',
+        var resource = $resource('/devices/:deviceId/states/:stateId',
           { deviceId: '@device', stateId: '@_id' });
+        resource.prototype.toString = function() {
+          var self = this;
+          return Object.keys(this.outputs).map(function(key) {
+            return key + ": " + self.outputs[key];
+          }).join(', ');
+        };
+        return resource;
       }])
   .factory('System', ['$resource',
       function ($resource) {

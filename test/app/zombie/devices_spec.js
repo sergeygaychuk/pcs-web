@@ -118,6 +118,7 @@ describe("devices", function() {
       });
 
       it("should show device state outputs", function(done) {
+        expect(browser.text("a[href='#/devices/" + knownDevice._id + "/states']")).toEqual("Архив");
         done();
 /*        browser.wait(function(window) {
           return window.document.querySelector("form[name='stateForm'] label[for='m1']");

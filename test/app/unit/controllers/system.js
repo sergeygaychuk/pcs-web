@@ -303,6 +303,14 @@ describe("Device Controllers", function() {
       expect(scope.device).toEqual({});
     });
 
+    it("should create states URL", function() {
+      httpBackend.expectGET('/devices/3').respond({_id: 3, name: "device"});
+      controller('SystemCtrl', { $scope: scope, $routeParams: routeParams });
+      httpBackend.flush();
+      expect(scope.statesURL).toEqual("#/devices/3/states");
+    });
+
+
     it("should define n", function() {
       controller('SystemCtrl', { $scope: scope, $routeParams: routeParams });
       expect(scope.n).toEqual({});

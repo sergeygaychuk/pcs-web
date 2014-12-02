@@ -40,7 +40,7 @@ describe("systems", function() {
       expect(browser.query("div.form-group button[ng-click='addOutput()']:disabled")).toBe(null);
       browser.pressButton("div.form-group button[ng-click='addOutput()']", function() {
         var outputs = browser.queryAll("div.form-group[ng-repeat='o in system.outputs']");
-        expect(browser.text("label[for='" + name + "']", outputs[idx])).toEqual(name);
+        expect(browser.text("a", outputs[idx])).toEqual(name);
         expect(browser.text("label[ng-if='state.outputs[o] == undefined']", outputs[idx])).toEqual("Отсутствует");
         cb();
       });
@@ -90,6 +90,7 @@ describe("systems", function() {
       }, function() {
         expect(browser.query("input[name='name']").value).toEqual(system.name);
         expect(browser.text("a[href='#/devices/" + system.device + "']")).toEqual(knownDevice.name);
+        expect(browser.text("a[href='#/devices/" + system.device + "/states']")).toEqual("Архив");
         expect(browser.query("input[name='n']")).not.toBe(null);
         expect(browser.query("input[name='set']")).not.toBe(null);
         expect(browser.query("input[name='setValue']")).toBe(null);

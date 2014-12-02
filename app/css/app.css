@@ -305,7 +305,8 @@ table.tp-data col.tp-fulldate {
 table.tp-data tr {
   border-left: 2px solid rgba(243,243,243,.85);
   background:rgba(243,243,243,.85);
-  color:#222
+  color:#222;
+  cursor: pointer;
 }
 
 table.tp-data tr:hover {

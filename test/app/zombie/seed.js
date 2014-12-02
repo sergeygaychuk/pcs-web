@@ -64,6 +64,27 @@ function createMultipleSites(count, next) {
   });
 }
 
+function createMultipleStates(device, count, next) {
+  var stamp = new Date();
+  stamp.setSeconds(count);
+  stamp.setMinutes(stamp.getMinutes() - 1);
+  var state = {
+    device: device._id,
+    stamp: stamp,
+    outputs: { m1: count },
+  };
+  (new State(state)).save(function(err) {
+    if (err)
+      throw "Error";
+    count -= 1;
+    if (count > 0) {
+      createMultipleStates(device, count, next);
+    } else {
+      next();
+    }
+  });
+}
+
 function seedUsers(done) {
   User.create(adminAttrs, function(e, newUser) {
     if (e) throw e;
@@ -119,6 +140,10 @@ function seedSystems(done) {
   });
 }
 
+function seedStates(done) {
+  createMultipleStates(knownDevice, 50, done);
+}
+
 function removeSystems(done) {
   System.remove(done);
 }
@@ -133,6 +158,10 @@ function removeDevices(done) {
 
 function removeSites(done) {
   Site.remove(done);
+}
+
+function removeStates(done) {
+  State.remove(done);
 }
 
 module.exports = {
@@ -150,16 +179,20 @@ module.exports = {
       seedUsers(function() {
         seedDevices(function() {
           seedSites(function() {
-            seedSystems(done);
+            seedSystems(function() {
+              seedStates(done);
+            });
           });
         });
       });
     },
     down: function(done) {
-      removeSystems(function() {
-        removeSites(function() {
-          removeDevices(function() {
-            removeUsers(done);
+      removeStates(function() {
+        removeSystems(function() {
+          removeSites(function() {
+            removeDevices(function() {
+              removeUsers(done);
+            });
           });
         });
       });

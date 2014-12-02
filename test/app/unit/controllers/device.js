@@ -123,6 +123,12 @@ describe("Device Controllers", function() {
       controller('DeviceCtrl', { $scope: scope, $routeParams: routeParams });
       expect(scope.setpoints).toBeDefined();
     });
+
+    it("should create states url", function() {
+      controller('DeviceCtrl', { $scope: scope, $routeParams: routeParams });
+      httpBackend.flush();
+      expect(scope.statesURL).toEqual("#/devices/2/states");
+    });
 /*
     describe("load device state", function() {
       beforeEach(function() {
