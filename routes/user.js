@@ -28,6 +28,31 @@ function requireAdminOrSelf(req, res, next) {
   res.send(403);
 }
 
+function registrationUser(req, res) {
+  function renderRegistration () {
+    res.render('users/registration', {
+      title: 'Sign up'
+    });
+  }
+  if (!req.session.operatorId)
+    return renderRegistration();
+
+  User.findOne({ _id: req.session.operatorId }, function (err, user) {
+    if (err) {
+      if (err.name !== 'CastError')
+        console.log(err);
+      req.session.operatorId = undefined;
+      return renderRegistration();
+    }
+
+    if (user)
+      return res.redirect('/');
+
+    req.session.operatorId = undefined;
+    return renderRegistration();
+  })
+}
+
 var exportFields = '_id name email admin';
 
 function showUser(req, res) {
@@ -94,6 +119,34 @@ function createUser(req, res) {
     res.json(req.user);
   });
 }
+
+function signupUser(req, res) {
+  function signupFail(validationError) {
+    res.locals.err = validationError;
+    res.render('users/registration', {
+      title: 'Sign up'
+    });
+  }
+  if (req.session.operatorId)
+    return res.json(500, {error: 'Sorry, internal server error'});
+
+  req.user = new User();
+  userFields.forEach(function (f) {
+    req.user[f] = req.body[f];
+  });
+  req.user.admin = true;
+  req.user.save(function (err) {
+    if (err) {
+      return signupFail(err);
+    }
+    req.session.messages = ['flash.create.success']
+    res.redirect('/signin');
+  });
+}
+
+
+module.exports.registration = [ registrationUser ];
+module.exports.signup = [ signupUser ];
 
 module.exports.show = [ auth.authenticate,
                         requireAdminOrSelf,

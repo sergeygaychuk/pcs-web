@@ -30,7 +30,7 @@ var Validations = function () {
         if (opts['length'])
           if (opts['length']['min'])
             if (this._password.length < opts['length']['min'])
-              this.invalidate('password', { path: 'password', type: 'short', count: opts['length']['min'] });
+              this.invalidate('password', { path: 'password', type: 'short.one', count: opts['length']['min'] });
       }
     };
   };

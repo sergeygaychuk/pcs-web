@@ -105,8 +105,10 @@ app.del('/signout', sessions.destroy);
 
 app.param('user', users.load);
 app.get('/users', users.index);
+app.get('/signup', users.registration);
 app.get('/users/:user', users.show);
 app.post('/users/:user', users.update);
+app.post('/signup', users.signup);
 app.post('/users', users.create);
 
 app.param('device', devices.load);
