@@ -6,6 +6,7 @@
  */
 
 var User = require('../models/user');
+var Superadmin = require('../models/superadmin');
 var auth = require('./_auth');
 
 function sessionNew(req, res) {
@@ -17,32 +18,45 @@ function sessionNew(req, res) {
   if (!req.session.operatorId)
     return renderNew();
 
-  User.findOne({ _id: req.session.operatorId }, function (err, user) {
-    if (err) {
-      if (err.name !== 'CastError')
-        console.log(err);
-      req.session.operatorId = undefined;
-      return renderNew();
-    }
-
+  Superadmin.findById(req.session.operatorId, function(err, user) {
     if (user)
       return res.redirect('/');
+    User.findOne({ _id: req.session.operatorId }, function (err, user) {
+      if (err) {
+        if (err.name !== 'CastError')
+          console.log(err);
+        req.session.operatorId = undefined;
+        return renderNew();
+      }
 
-    req.session.operatorId = undefined;
-    return renderNew();
-  })
+      if (user)
+        return res.redirect('/');
+
+      req.session.operatorId = undefined;
+      return renderNew();
+    })
+  });
 }
 
 module.exports.new = sessionNew;
 
 function loadOperatorByEmail(req, res, next) {
-  User.findOne({ email: req.body.email }, function (err, user) {
+  Superadmin.findByEmail(req.body.email, function(err, user) {
     if (err)
       return res.send(500, 'Sorry, internal server error.');
+    if (user) {
+      req.operator = user;
+      next();
+    } else {
+      User.findOne({ email: req.body.email }, function (err, user) {
+        if (err)
+          return res.send(500, 'Sorry, internal server error.');
 
-    req.operator = user;
-    next();
-  })
+        req.operator = user;
+        next();
+      });
+    }
+  });
 }
 
 function createSession(req, res) {

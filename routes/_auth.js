@@ -6,6 +6,7 @@
  */
 
 var User = require('../models/user');
+var Superadmin = require('../models/superadmin');
 
 module.exports.authenticate = function (req, res, next) {
   if (!req.session.operatorId) {
@@ -13,16 +14,23 @@ module.exports.authenticate = function (req, res, next) {
     return res.redirect('/signin');
   }
 
-  User.findOne({ _id: req.session.operatorId }, function (err, user) {
-    if (err)
-      return res.send(500, 'Sorry, internal server error.');
+  Superadmin.findById(req.session.operatorId, function(err, user) {
+    if (user) {
+      res.locals.operator = req.operator = user;
+      next();
+      return;
+    }
+    User.findOne({ _id: req.session.operatorId }, function (err, user) {
+      if (err)
+        return res.send(500, 'Sorry, internal server error.');
 
-    if (!user)
-      return res.redirect('/signin');
+      if (!user)
+        return res.redirect('/signin');
 
-    res.locals.operator = req.operator = user;
-    next();
-  })
+      res.locals.operator = req.operator = user;
+      next();
+    });
+  });
 }
 
 module.exports.requireAdmin = function (req, res, next) {
