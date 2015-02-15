@@ -30,7 +30,10 @@ var user_schema = new mongoose.Schema({
     type: String,
     validate: {
       validator: validates.password({ length: { min: 6 } } ) },
-    default: '' }
+    default: '' },
+  rights: {
+    type: {},
+    default: {} }
 });
 
 user_schema.virtual('password').get(function () {
@@ -56,7 +59,14 @@ user_schema.methods = {
 
   encrypt: function (password, cb) {
     bcrypt.hash(password, 1, cb);
-  }
+  },
+
+  can: function(action, klass) {
+    if (Object.keys(this.rights).length > 0) {
+      return this.rights[klass] !== undefined && this.rights[klass].indexOf(action) !== -1
+    }
+    return false;
+  },
 }
 
 user_schema.pre('save', function (next) {

@@ -37,6 +37,10 @@ System.find().remove(function() {});
 FactoryLady.define('user', User, {
   password: 'password',
   confirmation: 'password',
+  rights: {
+    "User": ["show", "edit"],
+    "Device": ["index"]
+  },
   name: function (cb) { cb(faker.name.findName()) },
   email: function (cb) { cb('user-' + ++userCounter + '@example.com') }
 })
@@ -44,6 +48,10 @@ FactoryLady.define('user', User, {
 FactoryLady.define('admin', User, {
   password: 'password',
   confirmation: 'password',
+  rights: {
+    "User": ["show", "edit"],
+    "Device": ["index"]
+  },
   admin: true,
   name: function (cb) { cb(faker.name.findName()) },
   email: function (cb) { cb('admin-' + ++userCounter + '@example.com') }

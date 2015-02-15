@@ -14,6 +14,7 @@ function t(key, options) {
 }
 
 var User = require('../models/user');
+var Device = require('../models/device');
 
 describe('Registration', function () {
   before( function () {
@@ -94,21 +95,16 @@ describe('Registration', function () {
         });
 
         describe("and logged user", function() {
-          it("should be administrator", function(done) {
-            browser
-            .visit('#/users')
-            .then(function() {
-              User.count(function(err, cnt) {
-                expect(err).to.be(null);
+          it("should have access to devices page", function(done) {
+            expect(browser.window.location.hash).to.be("#/devices");
+            Device.count(function(err, cnt) {
+              if (cnt > 25) {
+                expect(browser.queryAll("table tr").length).to.be(25);
+              } else {
                 expect(browser.queryAll("table tr").length).to.be(cnt);
-                for(var i = 0; i < cnt; ++ i) {
-                  if (browser.text("table tr:nth-of-type(" + i + ") td:nth-of-type(1)") === "Some new User") {
-                    expect(browser.text("table tr:nth-of-type(" + i + ") td:nth-of-type(4) span")).to.be(t('user.admin'));
-                  }
-                }
-                done();
-              });
-            }, done);
+              }
+              done();
+            });
           });
         });
       });

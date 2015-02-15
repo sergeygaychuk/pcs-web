@@ -102,7 +102,7 @@ describe('User routes', function() {
         var res = {
           locals: {},
           json_ng: function(u) {
-            expect(Object.keys(u)).to.eql(['_id', 'name', 'email', 'admin']);
+            expect(Object.keys(u)).to.eql(['_id', 'name', 'email', 'admin', 'rights']);
             expect(u._id).to.eql(operator._id);
             expect(u.name).to.eql(operator.name);
             expect(u.email).to.eql(operator.email);
@@ -162,6 +162,7 @@ describe('User routes', function() {
         req.user = operator;
         req.body = {
           email: operator.email,
+          rights: operator.rights,
           name: "update.operator",
         };
         router(Routes.update, req, res);
@@ -184,6 +185,7 @@ describe('User routes', function() {
         req.body = {
           email: operator.email,
           name: operator.name,
+          rights: operator.rights,
           admin: 1,
         };
         router(Routes.update, req, res);
@@ -207,6 +209,7 @@ describe('User routes', function() {
         req.user = operator;
         req.body = {
           email: 'new_user@example.com',
+          rights: operator.rights,
           name: operator.name,
         };
         router(Routes.update, req, res);
@@ -231,6 +234,7 @@ describe('User routes', function() {
         req.body = {
           email: operator.email,
           name: operator.name,
+          rights: operator.rights,
           password: "1111111",
           confirmation: "1111111",
         };
@@ -256,6 +260,7 @@ describe('User routes', function() {
         req.body = {
           email: operator.email,
           name: operator.name,
+          rights: operator.rights,
           password: "1111111",
           confirmation: "1111112",
         };
@@ -289,6 +294,7 @@ describe('User routes', function() {
         req.user = admin;
         req.body = {
           email: admin.email,
+          rights: admin.rights,
           name: 'update admin',
           admin: true,
         };
@@ -312,6 +318,7 @@ describe('User routes', function() {
         req.body = {
           email: admin.email,
           name: admin.name,
+          rights: admin.rights,
           admin: false,
         };
         router(Routes.update, req, res);
@@ -336,6 +343,7 @@ describe('User routes', function() {
           email: user.email,
           name: 'update.user',
           admin: user.admin,
+          rights: admin.rights,
         };
         router(Routes.update, req, res);
       });
@@ -356,6 +364,7 @@ describe('User routes', function() {
         req.user = user;
         req.body = {
           email: 'new_user@example.com',
+          rights: admin.rights,
           name: user.name,
           admin: user.admin,
         };
@@ -381,6 +390,7 @@ describe('User routes', function() {
         req.body = {
           email: user.email,
           name: user.name,
+          rights: admin.rights,
           password: "1111111",
           confirmation: "1111111",
         };
@@ -413,6 +423,14 @@ describe('User routes', function() {
 
     describe("when administrator signed in", function() {
       var req, res;
+
+      before(function(done) {
+        admin.rights["User"].push("index");
+        admin.markModified('rights');
+        admin.save(function() {
+          done();
+        });
+      });
 
       beforeEach(function() {
         req = { session: { operatorId: admin._id } };
@@ -520,6 +538,14 @@ describe('User routes', function() {
 
     describe("when administrator signed in", function() {
       var req, res;
+
+      before(function(done) {
+        admin.rights["User"].push("create");
+        admin.markModified('rights');
+        admin.save(function() {
+          done();
+        });
+      });
 
       beforeEach(function() {
         req = { session: { operatorId: admin._id } };

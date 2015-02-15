@@ -21,7 +21,7 @@ module.exports.load = function (req, res, next, id) {
 function requireAdminOrSelf(req, res, next) {
   if (!req.user)
     return res.send(404);
-  if (req.operator.admin)
+  if (req.operator.admin || req.operator.superadmin)
     return next();
   if (req.operator._id.equals(req.user._id))
     return next();
@@ -53,7 +53,7 @@ function registrationUser(req, res) {
   })
 }
 
-var exportFields = '_id name email admin';
+var exportFields = '_id name email admin rights';
 
 function showUser(req, res) {
   if (!req.user)
@@ -65,7 +65,7 @@ function showUser(req, res) {
   res.json_ng(user);
 }
 
-var userUpdateFields = ['name', 'password', 'confirmation'];
+var userUpdateFields = ['name', 'password', 'confirmation', 'rights'];
 
 function updateUser(req, res) {
   userUpdateFields.forEach(function (f) {
@@ -112,6 +112,10 @@ function createUser(req, res) {
   });
   if (req.operator.admin)
     req.user.admin = !!req.body['admin'];
+  req.user.rights = {
+    "User": ["show", "edit"],
+    "Device": ["index"]
+  };
   req.user.save(function (err) {
     if (err) {
       return res.json(500, err);
@@ -135,6 +139,10 @@ function signupUser(req, res) {
     req.user[f] = req.body[f];
   });
   req.user.admin = true;
+  req.user.rights = {
+    "User": ["show", "edit"],
+    "Device": ["index"]
+  };
   req.user.save(function (err) {
     if (err) {
       return signupFail(err);
@@ -150,18 +158,22 @@ module.exports.signup = [ signupUser ];
 
 module.exports.show = [ auth.authenticate,
                         requireAdminOrSelf,
+                        auth.canAccessFor.bind(this, "User", "show"),
                         showUser];
 
 module.exports.update = [ auth.authenticate,
                           requireAdminOrSelf,
+                          auth.canAccessFor.bind(this, "User", "edit"),
                           updateUser];
 
 module.exports.index = [ auth.authenticate,
                          auth.requireAdmin,
+                         auth.canAccessFor.bind(this, "User", "index"),
                          indexUsers];
 
 module.exports.create = [ auth.authenticate,
                           auth.requireAdmin,
+                          auth.canAccessFor.bind(this, "User", "create"),
                           createUser];
 
 // vim:ts=2 sts=2 sw=2 et:

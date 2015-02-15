@@ -10,6 +10,7 @@ angular.module('pcs', [
   'pcs.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/', {template: " ", controller: 'AccessController'});
   $routeProvider.when('/devices/new', {templateUrl: 'partials/device.html', controller: 'NewDeviceCtrl'});
   $routeProvider.when('/devices/:deviceId', {templateUrl: 'partials/device.html', controller: 'DeviceCtrl'});
   $routeProvider.when('/devices', {templateUrl: 'partials/devices.html', controller: 'DevicesCtrl'});
@@ -21,5 +22,5 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/users/new', {templateUrl: 'partials/user.html', controller: 'NewUserCtrl'});
   $routeProvider.when('/users/:userId', {templateUrl: 'partials/user.html', controller: 'UserCtrl'});
   $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersCtrl'});
-  $routeProvider.otherwise({redirectTo: '/sites'});
+  $routeProvider.otherwise({redirectTo: '/'});
 }]);

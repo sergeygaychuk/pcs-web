@@ -22,7 +22,17 @@ angular.module('pcs.controllers', [])
       show: false
     }
     $scope.moment = moment;
-    $scope.operator = {}
+    $scope.operator = {
+      can: function(access, klass) {
+        if (this.rights && Object.keys(this.rights).length > 0) {
+          if (this.rights[klass] &&
+              this.rights[klass].indexOf(access) !== -1) {
+            return true;
+          }
+        }
+        return false;
+      }
+    };
     $scope.setNewURL = function (url) {
       $scope.newURL = url;
     }
@@ -46,6 +56,17 @@ angular.module('pcs.controllers', [])
         $scope.pager.next = '';
       } else {
         $scope.pager.next = '#' + $location.path() + '?page=' + (page + 1);
+      }
+    }
+  }])
+  .controller('AccessController', ['$scope', '$location', function($scope, $location) {
+    if ($scope.operator) {
+      if ($scope.operator.can("index", "User")) {
+        $location.path('/users');
+      } else if ($scope.operator.can("index", "Site")) {
+        $location.path('/sites');
+      } else if ($scope.operator.can("index", "Device")) {
+        $location.path('/devices');
       }
     }
   }])

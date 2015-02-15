@@ -88,6 +88,7 @@ describe('User', function(){
     })
   })
 
+  /*
   describe('administration of', function () {
     var admin;
     before(function (done) {
@@ -241,7 +242,7 @@ describe('User', function(){
         it('should show created user');
       })
     })
-  })
+  })*/
 });
 
 // vim:ts=2 sts=2 sw=2 et:

@@ -14,10 +14,20 @@ function Superadmin() {
   this.admin = false;
   this.superadmin = true;
   this.name = "Superadmin";
+  this.rights = {
+    "User": ["index", "show", "create", "edit"]
+  };
 
   this.authenticate = function(password, cb) {
     bcrypt.compare(password ? password : '', config.saPasswordHash, cb);
   };
+
+  this.can = function(action, klass) {
+    if (Object.keys(this.rights).length > 0) {
+      return this.rights[klass] !== undefined && this.rights[klass].indexOf(action) !== -1
+    }
+    return false;
+  }
 }
 
 Superadmin.findById = function(id, cb) {
