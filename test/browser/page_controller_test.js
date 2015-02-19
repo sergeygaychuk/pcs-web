@@ -46,7 +46,7 @@ describe("Page Controller", function() {
     });
 
     it("should define operator", function() {
-      expect(scope.operator).to.eql({});
+      expect(scope.operator).to.be.defined;
     });
 
     describe("#setNewURL", function() {
