@@ -32,6 +32,14 @@
           <input id="confirmation" name="confirmation" type="password" ng-model="user.confirmation" placeholder="Подтверждение" class="form-control input-sm">
         </div>
       </div>
+      <div ng-if="operator.superadmin" class="form-group" ng-repeat="(right,data) in operator.knownRights">
+        <label for="rights-{{right}}" class="control-label col-sm-3">Права: {{data.name}}</label>
+        <div class="col-sm-9">
+          <label class="col-sm-3" ng-repeat="(action, hr) in data.values">
+            {{hr}}<input type="checkbox" checklist-model="user.rights[right]" checklist-value="action" class="form-control input-sm">
+          </label>
+        </div>
+      </div>
       <button name="submit" class="btn btn-sm btn-primary" ng-disabled="userForm.$pristine" ng-click="save()">{{(user._id) ? 'Изменить' : 'Создать'}}</button>
     </form>
   </div>

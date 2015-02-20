@@ -18,6 +18,13 @@ angular.module('pcs.directives', []).
       }
     };
   }]).
+  directive('pcsOperatorSuperadmin', [function() {
+    return function(scope, elm, attrs) {
+      if (elm.text() === 'true') {
+        scope.operator.superadmin = true;
+      }
+    };
+  }]).
   directive('pcsOperatorId', [function() {
     return function(scope, elm, attrs) {
       scope.operator._id = elm.text();

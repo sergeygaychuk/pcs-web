@@ -31,7 +31,7 @@ angular.module('pcs.controllers', [])
           }
         }
         return false;
-      }
+      },
     };
     $scope.setNewURL = function (url) {
       $scope.newURL = url;

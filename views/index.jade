@@ -21,11 +21,20 @@ html(ng-app="pcs")
               = operator.name
               p(style="display:none", pcs-operator-id)= operator._id
               p(style="display:none", pcs-operator-admin)= operator.admin
+              p(style="display:none", pcs-operator-superadmin)= operator.superadmin
               p(style="display:none", pcs-operator-rights)= JSON.stringify(operator.rights)
+              p(style="display:none", ng-init="operator.knownRights = {\
+              'User': { name: '"+t('user.rights.user.name')+"', values: {\
+              index: '"+t('user.rights.user.index')+"', show: '"+t('user.rights.user.show')+"', \
+              create: '"+t('user.rights.user.create')+"', edit: '"+t('user.rights.user.edit')+"'}},\
+              'Device': { name: '"+t('user.rights.device.name')+"', values: {\
+              index: '"+t('user.rights.device.index')+"', show: '"+t('user.rights.device.show')+"', \
+              create: '"+t('user.rights.device.create')+"', edit: '"+t('user.rights.device.edit')+"', \
+              claim: '"+t('user.rights.device.claim')+"'}}}")
               span.caret
             ul.dropdown-menu
               li
-                a(href='#/users/#{operator._id}') Profile
+                a(href='#/users/#{operator._id}') Профиль
               li
                 form(method='post', action='/signout', accept-charset="UTF-8").form-signout
                   input(type='hidden',name='_method',value='delete')
@@ -74,6 +83,7 @@ html(ng-app="pcs")
     script(src='bower_components/bootstrap/dist/js/bootstrap.js')
     script(src='bower_components/moment/moment.js')
     script(src='bower_components/moment/lang/ru.js')
+    script(src='bower_components/checklist-model/checklist-model.js')
     script(src='js/app.js')
     script(src='js/services.js')
     script(src='js/controllers.js')

@@ -29,6 +29,20 @@ ru:
     password: Пароль
     confirmation: Подтверждение
     new: Создать пользователя
+    rights:
+      user:
+        name: Пользователи
+        index: список
+        create: создание
+        show: просмотр
+        edit: редактирование
+      device:
+        name: Устройства
+        index: список
+        create: создание
+        show: просмотр
+        edit: редактирование
+        claim: присвоение
   action:
     put: Изменить
     undefined: Создать

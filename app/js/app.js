@@ -7,7 +7,8 @@ angular.module('pcs', [
   'pcs.filters',
   'pcs.services',
   'pcs.directives',
-  'pcs.controllers'
+  'pcs.controllers',
+  'checklist-model'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {template: " ", controller: 'AccessController'});
