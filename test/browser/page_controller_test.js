@@ -49,11 +49,12 @@ describe("Page Controller", function() {
       expect(scope.operator).to.be.defined;
     });
 
-    describe("#setNewURL", function() {
-      it("should update newURL", function() {
+    describe("#prepareInformation", function() {
+      it("should update newURL and klass", function() {
         expect(scope.newURL).to.be.undefined;
-        scope.setNewURL("HELLO");
+        scope.prepareInformation("HELLO", "KLASS");
         expect(scope.newURL).to.equal("HELLO");
+        expect(scope.klass).to.equal("KLASS");
       });
     });
 

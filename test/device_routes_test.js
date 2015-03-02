@@ -77,15 +77,30 @@ describe('Device routes', function() {
         req = { session: { operatorId: operator._id } };
       });
 
-      it("should return 404 if no device", function(done) {
+      it("should deny for operators without show rights", function(done) {
         var res = {
           locals: {},
           send: function(code) {
-            expect(code).to.be(404);
+            expect(code).to.be(403);
             done();
           },
         };
         router(Routes.show, req, res);
+      });
+
+      it("should return 404 if no device", function(done) {
+        operator.rights["Device"].push("show");
+        operator.markModified("rights");
+        operator.save(function() {
+          var res = {
+            locals: {},
+            send: function(code) {
+              expect(code).to.be(404);
+              done();
+            },
+          };
+          router(Routes.show, req, res);
+        });
       });
 
       it("should return only accessible fields", function(done) {
@@ -141,19 +156,34 @@ describe('Device routes', function() {
         req = { session: { operatorId: admin._id } };
       });
 
-      it("should fail", function(done) {
-        var res = {
+      it("should deny without rights", function(done) {
+        res = {
           locals: {},
-          json: function(code) {
-            expect(code).to.eql(500);
+          send: function(code) {
+            expect(code).to.eql(403);
             done();
           },
         };
-        req.body = {
-          name: "Some name",
-        };
-        req.device = device;
         router(Routes.update, req, res);
+      });
+
+      it("should fail", function(done) {
+        admin.rights["Device"].push("edit");
+        admin.markModified("rights");
+        admin.save(function() {
+          var res = {
+            locals: {},
+            json: function(code) {
+              expect(code).to.eql(500);
+              done();
+            },
+          };
+          req.body = {
+            name: "Some name",
+          };
+          req.device = device;
+          router(Routes.update, req, res);
+        });
       });
     });
   });
@@ -292,16 +322,31 @@ describe('Device routes', function() {
         };
       });
 
-      it("should create device with valid params", function(done) {
-        req.body = {
-          name: 'created device',
-        }
-        res.json = function(device) {
-          expect(device._id).not.to.be.an('undefined');
-          expect(device.name).to.be(req.body.name);
-          done();
+      it("should deny administrators without create rights", function(done) {
+        var res = {
+          locals: {},
+          send: function(code) {
+            expect(code).to.be(403);
+            done();
+          },
         };
         router(Routes.create, req, res);
+      });
+
+      it("should create device with valid params", function(done) {
+        admin.rights["Device"].push("create");
+        admin.markModified("rights");
+        admin.save(function() {
+          req.body = {
+            name: 'created device',
+          }
+          res.json = function(device) {
+            expect(device._id).not.to.be.an('undefined');
+            expect(device.name).to.be(req.body.name);
+            done();
+          };
+          router(Routes.create, req, res);
+        });
       });
 
       it("should fail when name is already taken", function(done) {

@@ -75,17 +75,21 @@ function createDevice(req, res) {
 }
 
 module.exports.show = [ auth.authenticate,
+                        auth.canAccessFor.bind(this, "Device", "show"),
                         showDevice];
 
 module.exports.update = [ auth.authenticate,
                           auth.requireAdmin,
+                          auth.canAccessFor.bind(this, "Device", "edit"),
                           updateDevice];
 
 module.exports.index = [ auth.authenticate,
+                         auth.canAccessFor.bind(this, "Device", "index"),
                          indexDevices];
 
 module.exports.create = [ auth.authenticate,
                           auth.requireAdmin,
+                          auth.canAccessFor.bind(this, "Device", "create"),
                           createDevice];
 
 // vim:ts=2 sts=2 sw=2 et:

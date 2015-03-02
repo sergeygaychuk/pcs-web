@@ -65,7 +65,7 @@ html(ng-app="pcs")
     .tp-main.row
       .col-xs-4.col-md-2.col-xl-2.tp-sidebar
         ul.nav.tp-tools-side
-          li(ng-if="newURL && operator.admin"): a.btn.btn-sm.btn-danger(href="{{newURL}}")= t('action.undefined')
+          li(ng-if="newURL" pcs-operator-can="create" access-klass="{{klass}}" operator="operator"): a.btn.btn-sm.btn-danger(href="{{newURL}}")= t('action.undefined')
         ul.nav.tp-menu-side(ng-controller="NavCtrl")
           li(pcs-operator-can="index" access-klass="Site" operator="operator" ng-class="{ active: isActive('#/sites') }")
             a(href='#/sites')= t('site.self.plural')

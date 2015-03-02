@@ -34,7 +34,7 @@ describe("Device Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
       };
     });
 
@@ -43,9 +43,9 @@ describe("Device Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should clear setNewURL", function() {
+    it("should clear prepareInformation", function() {
       controller('NewDeviceCtrl', { $scope: scope });
-      expect(scope.setNewURL).to.have.been.calledWith(null);
+      expect(scope.prepareInformation).to.have.been.calledWith(null, null);
     });
 
     it("should create device in scope", function() {
@@ -88,7 +88,7 @@ describe("Device Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
       };
     });
 
@@ -103,8 +103,8 @@ describe("Device Controllers", function() {
         expect(scope.page).to.have.been.calledWith(1, 25, 2);
       });
 
-      it("should call setNewURL", function() {
-        expect(scope.setNewURL).to.have.been.calledWith('#/devices/new');
+      it("should call prepareInformation", function() {
+        expect(scope.prepareInformation).to.have.been.calledWith('#/devices/new', "Device");
       });
 
       it("should fill devices", function() {
@@ -134,7 +134,7 @@ describe("Device Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
         $on: sinon.spy(),
       };
       routeParams = { deviceId: 2 };
@@ -148,8 +148,8 @@ describe("Device Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should call setNewURL with params", function() {
-      expect(scope.setNewURL).to.have.been.calledWith('#/devices/new');
+    it("should call prepareInformation with params", function() {
+      expect(scope.prepareInformation).to.have.been.calledWith('#/devices/new', "Device");
     });
 
     it("should load device", function() {

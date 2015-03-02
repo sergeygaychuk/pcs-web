@@ -35,7 +35,7 @@ describe("Site Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
       };
     });
 
@@ -44,9 +44,9 @@ describe("Site Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should clear setNewURL", function() {
+    it("should clear prepareInformation", function() {
       controller('NewSiteCtrl', { $scope: scope });
-      expect(scope.setNewURL).to.have.been.calledWith(null);
+      expect(scope.prepareInformation).to.have.been.calledWith(null, null);
     });
 
     it("should create site in scope", function() {
@@ -89,7 +89,7 @@ describe("Site Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
       };
       routeParams = { siteId: 2 };
       httpBackend.expectGET('/sites/2').respond({_id: 2, name: "hello"});
@@ -98,8 +98,8 @@ describe("Site Controllers", function() {
       httpBackend.flush();
     });
 
-    it("should call setNewURL with params", function() {
-      expect(scope.setNewURL).to.have.been.calledWith('#/sites/2/systems/new');
+    it("should call prepareInformation with params", function() {
+      expect(scope.prepareInformation).to.have.been.calledWith('#/sites/2/systems/new', 'System');
     });
 
     it("should load site", function() {
@@ -146,15 +146,15 @@ describe("Site Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
       };
 
       httpBackend.expectGET('/sites?page=1').respond([{_id: 1}, {_id: 2}, {count: 2}]);
       controller('SitesCtrl', { $scope: scope });
     });
 
-    it("should call setNewURL", function() {
-      expect(scope.setNewURL).to.have.been.calledWith('#/sites/new');
+    it("should call prepareInformation", function() {
+      expect(scope.prepareInformation).to.have.been.calledWith('#/sites/new', 'Site');
     });
 
     it("should setup pager", function() {

@@ -36,7 +36,7 @@
         <label for="rights-{{right}}" class="control-label col-sm-3">Права: {{data.name}}</label>
         <div class="col-sm-9">
           <label class="col-sm-3" ng-repeat="(action, hr) in data.values">
-            {{hr}}<input type="checkbox" checklist-model="user.rights[right]" checklist-value="action" class="form-control input-sm">
+            {{hr}}<input type="checkbox" checklist-model="user.rights[right]" checklist-value="action" class="form-control input-sm rights-{{right | lowercase}}-{{action | lowercase}}">
           </label>
         </div>
       </div>

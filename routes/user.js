@@ -71,9 +71,10 @@ function updateUser(req, res) {
   userUpdateFields.forEach(function (f) {
     req.user[f] = req.body[f];
   });
-  if (req.operator.superadmin && !req.operator._id.equals(req.user._id))
+  if (req.operator.superadmin && req.operator._id.toString() != req.user._id.toString()) {
     req.user.rights = req.body.rights;
-  if (req.operator.admin && !req.operator._id.equals(req.user._id))
+  }
+  if (req.operator.admin && req.operator._id.toString() != req.user._id.toString())
     req.user.admin = !!req.body['admin'];
   req.user.save(function (err) {
     if (err) {

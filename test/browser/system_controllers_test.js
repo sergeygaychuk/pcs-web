@@ -37,7 +37,7 @@ describe("System Controllers", function() {
       scope = {
         $on: sinon.spy(),
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
       };
       systemHelper = {
         setDeviceUpdater: sinon.spy()
@@ -50,8 +50,8 @@ describe("System Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should clear setNewURL", function() {
-      expect(scope.setNewURL).to.have.been.calledWith(null);
+    it("should clear prepareInformation", function() {
+      expect(scope.prepareInformation).to.have.been.calledWith(null, null);
     });
 
     it("should create system in scope", function() {
@@ -107,7 +107,7 @@ describe("System Controllers", function() {
       scope = {
         $on: sinon.spy(),
         page: sinon.spy(),
-        setNewURL: sinon.spy(),
+        prepareInformation: sinon.spy(),
       };
       routeParams = { siteId: 2, systemId: 1 };
       httpBackend.expectGET('/sites/2/systems/1').respond({
@@ -135,8 +135,8 @@ describe("System Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should clear setNewURL", function() {
-      expect(scope.setNewURL).to.have.been.calledWith(null);
+    it("should clear prepareInformation", function() {
+      expect(scope.prepareInformation).to.have.been.calledWith(null, null);
     });
 
     it("should load system", function() {
