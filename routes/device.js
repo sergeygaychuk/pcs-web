@@ -24,6 +24,8 @@ var exportFields = '_id name';
 function showDevice(req, res) {
   if (!req.device)
     return res.send(404);
+  if (!req.device.owner.equals(req.operator._id))
+    return res.send(401);
   var device = {};
   exportFields.split(' ').forEach(function (f) {
     device[f] = req.device[f];
@@ -42,6 +44,7 @@ function indexDevices(req, res) {
   var page = Number(req.query.page) || 1;
   if (req.query.name && req.query.name !== '')
     search['name'] = req.query.name;
+  search.owner = req.operator._id;
   page--;
   if (page < 0)
     page = 0;
@@ -66,6 +69,7 @@ function createDevice(req, res) {
   deviceFields.forEach(function (f) {
     req.device[f] = req.body[f];
   });
+  req.device.owner = req.operator._id;
   req.device.save(function (err) {
     if (err) {
       return res.json(500, err);

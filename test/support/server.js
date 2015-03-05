@@ -60,7 +60,8 @@ FactoryLady.define('admin', User, {
 var deviceCounter = 0;
 
 FactoryLady.define('device', Device, {
-  name: function (cb) { cb(faker.lorem.words(1) + ++deviceCounter) }
+  name: function (cb) { cb(faker.lorem.words(1) + ++deviceCounter) },
+  owner: FactoryLady.assoc('admin', 'id')
 })
 
 var siteCounter = 0;

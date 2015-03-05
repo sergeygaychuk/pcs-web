@@ -66,14 +66,18 @@ describe('Registartion of device', function () {
         expect(selBrowser.query("a[href='#/sites']").parentNode.style.display).to.be("none");
       });
 
+      it("shouldn't see any devices", function() {
+        expect(selBrowser.queryAll("table.tp-data tr").length).to.be(0);
+      });
+
       it("shouldn't see create device", function() {
         expect(selBrowser.query("a[href='#/devices/new']").parentNode.style.display).to.be("none");
       });
     });
   });
 
-  describe('superadmin assign right to create device', function() {
     var seller = null;
+  describe('superadmin assign right to create device', function() {
 
     before(function(done) {
       User.findOne({email: 'seller@asutp.io'}, function(err, u) {
@@ -185,7 +189,7 @@ describe('Registartion of device', function () {
     it("should see device in list", function(done) {
       selBrowser.clickLink("a[href='#/devices']", function() {
         expect(selBrowser.url).to.eql(url + '/#/devices');
-        expect(selBrowser.text("table tr:nth-child(2) td.tp-sender a")).to.be("some new device");
+        expect(selBrowser.text("table tr:nth-child(1) td.tp-sender a")).to.be("some new device");
         done();
       });
     });
@@ -249,6 +253,10 @@ describe('Registartion of device', function () {
         expect(userBrowser.query("a[href='#/devices']")).not.to.be(null);
         expect(userBrowser.query("a[href='#/users']")).not.to.be(null);
         expect(userBrowser.query("a[href='#/sites']")).not.to.be(null);
+      });
+
+      it("shouldn't see devices", function() {
+        expect(userBrowser.queryAll("table.tp-data tr").length).to.be(0);
       });
 
       it("shouldn't see create device", function() {

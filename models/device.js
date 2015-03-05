@@ -16,10 +16,16 @@ var device_schema = new mongoose.Schema({
       validator: validates.length({ max: 50 }),
       msg: 'name is too long' },
     trim: true
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   }
 });
 
 device_schema.index({ name: 1 }, { unique: 1 });
+device_schema.index({ owner: 1, _id: 1 });
 
 var Device = mongoose.model('Device', device_schema);
 

@@ -97,14 +97,8 @@ describe('Registration', function () {
         describe("and logged user", function() {
           it("should have access to devices page", function(done) {
             expect(browser.window.location.hash).to.be("#/devices");
-            Device.count(function(err, cnt) {
-              if (cnt > 25) {
-                expect(browser.queryAll("table tr").length).to.be(25);
-              } else {
-                expect(browser.queryAll("table tr").length).to.be(cnt);
-              }
-              done();
-            });
+            expect(browser.queryAll("table tr").length).to.be(0);
+            done();
           });
         });
       });
