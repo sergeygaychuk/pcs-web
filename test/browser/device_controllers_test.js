@@ -34,7 +34,9 @@ describe("Device Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
     });
 
@@ -43,9 +45,10 @@ describe("Device Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should clear prepareInformation", function() {
+    it("should call create action functions", function() {
       controller('NewDeviceCtrl', { $scope: scope });
-      expect(scope.prepareInformation).to.have.been.calledWith(null, null);
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('Device');
     });
 
     it("should create device in scope", function() {
@@ -88,7 +91,9 @@ describe("Device Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
     });
 
@@ -103,8 +108,11 @@ describe("Device Controllers", function() {
         expect(scope.page).to.have.been.calledWith(1, 25, 2);
       });
 
-      it("should call prepareInformation", function() {
-        expect(scope.prepareInformation).to.have.been.calledWith('#/devices/new', "Device");
+      it("should call create action functions", function() {
+        expect(scope.clearCreateActions).to.have.been.calledWith();
+        expect(scope.setKlass).to.have.been.calledWith('Device');
+        expect(scope.addCreateAction).to.have.been.calledWith('Create', '#/devices/new', 'create');
+        expect(scope.addCreateAction).to.have.been.calledWith('Claim', '#/devices/claim', 'claim');
       });
 
       it("should fill devices", function() {
@@ -134,7 +142,9 @@ describe("Device Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
         $on: sinon.spy(),
       };
       routeParams = { deviceId: 2 };
@@ -148,8 +158,11 @@ describe("Device Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should call prepareInformation with params", function() {
-      expect(scope.prepareInformation).to.have.been.calledWith('#/devices/new', "Device");
+    it("should call create action functions", function() {
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('Device');
+      expect(scope.addCreateAction).to.have.been.calledWith('Create', '#/devices/new', 'create');
+      expect(scope.addCreateAction).to.have.been.calledWith('Claim', '#/devices/claim', 'claim');
     });
 
     it("should load device", function() {

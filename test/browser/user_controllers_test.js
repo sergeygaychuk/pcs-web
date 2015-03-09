@@ -31,7 +31,9 @@ describe("User Controllers", function() {
       controller = $controller;
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
     }));
 
@@ -40,9 +42,11 @@ describe("User Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should call prepareInformation with params", function() {
+
+    it("should call create action functions", function() {
       controller('NewUserCtrl', { $scope: scope });
-      expect(scope.prepareInformation).to.have.been.calledWith(null, null);
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('User');
     });
 
     it("should create user", function() {
@@ -91,7 +95,9 @@ describe("User Controllers", function() {
       controller = $controller;
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
       routeParams = { userId: 2 };
       httpBackend.expectGET('/users/2').respond({_id: 2, name: "hello"});
@@ -102,9 +108,12 @@ describe("User Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should call prepareInformation with params", function() {
+
+    it("should call create action functions", function() {
       controller('UserCtrl', { $scope: scope, $routeParams: routeParams });
-      expect(scope.prepareInformation).to.have.been.calledWith('#/users/new', 'User');
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('User');
+      expect(scope.addCreateAction).to.have.been.calledWith('Create', '#/users/new', 'create');
     });
 
     it("should create user", function() {
@@ -147,14 +156,18 @@ describe("User Controllers", function() {
       controller = $controller;
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
     }));
 
-    it("should call prepareInformation", function() {
+    it("should call create action functions", function() {
       httpBackend.expectGET('/users?page=1').respond([]);
       controller('UsersCtrl', { $scope: scope });
-      expect(scope.prepareInformation).to.have.been.calledWith('#/users/new', 'User');
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('User');
+      expect(scope.addCreateAction).to.have.been.calledWith('Create', '#/users/new', 'create');
     });
 
     it("should call page after load users", function() {

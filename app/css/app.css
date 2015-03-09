@@ -221,6 +221,8 @@ body > .row {
   font-weight: bold;
 }
 
+.tp-sidebar .nav.tp-tools-side > li > button.btn,
+.tp-sidebar .nav.tp-tools-side > li > button.btn:hover,
 .tp-sidebar .nav.tp-tools-side > li > a.btn,
 .tp-sidebar .nav.tp-tools-side > li > a.btn:hover {
   margin: 0px 15px 8px 31px;
@@ -240,6 +242,13 @@ body > .row {
   background: -moz-linear-gradient(top, #dd4b39, #d14836);
   background: linear-gradient(-45deg, #dd4b39, #d14836);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#dd4b39,endColorstr=#d14836,GradientType=1);
+}
+.tp-sidebar .nav.tp-tools-side > li > button.btn > span.caret {
+  margin-left: 4px;
+}
+.tp-sidebar .nav.tp-tools-side > li > ul.dropdown-menu {
+  margin-top: -8px;
+  margin-left: 31px;
 }
 
 .tp-content {

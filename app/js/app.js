@@ -13,6 +13,7 @@ angular.module('pcs', [
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {template: " ", controller: 'AccessController'});
   $routeProvider.when('/devices/new', {templateUrl: 'partials/device.html', controller: 'NewDeviceCtrl'});
+  $routeProvider.when('/devices/claim', {templateUrl: 'partials/deviceClaim.html', controller: 'ClaimDeviceCtrl'});
   $routeProvider.when('/devices/:deviceId', {templateUrl: 'partials/device.html', controller: 'DeviceCtrl'});
   $routeProvider.when('/devices', {templateUrl: 'partials/devices.html', controller: 'DevicesCtrl'});
   $routeProvider.when('/sites/:siteId/systems/new', {templateUrl: 'partials/system.html', controller: 'NewSystemCtrl'});

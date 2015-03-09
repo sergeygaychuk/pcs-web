@@ -64,14 +64,21 @@ html(ng-app="pcs")
 
     .tp-main.row
       .col-xs-4.col-md-2.col-xl-2.tp-sidebar
-        ul.nav.tp-tools-side
-          li(ng-if="newURL" pcs-operator-can="create" access-klass="{{klass}}" operator="operator"): a.btn.btn-sm.btn-danger(href="{{newURL}}")= t('action.undefined')
+        ul.nav.tp-tools-side(ng-if="createActions.length > 0")
+          li(pcs-operator-can="{{createActions[0].action}}", access-klass="{{klass}}", operator="operator" ng-if="singleBtnMode()")
+            a.btn.btn-sm.btn-danger(href="{{createActions[0].url}}")= "{{createActions[0].name}}"
+          li(ng-if="multiBtnMode()")
+            button.btn.btn-sm.btn-danger.dropdown-toggle(type="button", data-toggle="dropdown")
+              = t('action.undefined')
+              span.caret
+            ul.dropdown-menu(role="menu")
+              li(pcs-operator-can="{{item.action}}", access-klass="{{klass}}", operator="operator" ng-repeat="item in createActions"): a(href="{{item.url}}")= "{{item.name}}"
         ul.nav.tp-menu-side(ng-controller="NavCtrl")
-          li(pcs-operator-can="index" access-klass="Site" operator="operator" ng-class="{ active: isActive('#/sites') }")
+          li(pcs-operator-can="index", access-klass="Site", operator="operator", ng-class="{ active: isActive('#/sites') }")
             a(href='#/sites')= t('site.self.plural')
-          li(pcs-operator-can="index" access-klass="Device" operator="operator" ng-class="{ active: isActive('#/devices') }")
+          li(pcs-operator-can="index", access-klass="Device", operator="operator", ng-class="{ active: isActive('#/devices') }")
             a(href='#/devices')= t('device.self.plural')
-          li(pcs-operator-can="index" access-klass="User" operator="operator" ng-class="{ active: isActive('#/users') }")
+          li(pcs-operator-can="index", access-klass="User", operator="operator", ng-class="{ active: isActive('#/users') }")
             a(href='#/users')= t('user.self.plural')
       .col-xs-12.col-md-10.col-xl-14.tp-content
         div(ng-view)

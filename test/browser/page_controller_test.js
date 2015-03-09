@@ -49,12 +49,19 @@ describe("Page Controller", function() {
       expect(scope.operator).to.be.defined;
     });
 
-    describe("#prepareInformation", function() {
+    describe("#create actions", function() {
       it("should update newURL and klass", function() {
-        expect(scope.newURL).to.be.undefined;
-        scope.prepareInformation("HELLO", "KLASS");
-        expect(scope.newURL).to.equal("HELLO");
+        expect(scope.createActions.length).to.equal(0);
+        expect(scope.klass).to.be.undefined;
+        scope.setKlass("KLASS");
         expect(scope.klass).to.equal("KLASS");
+        scope.addCreateAction("Create", "#/new", 'aa');
+        expect(scope.createActions.length).to.equal(1);
+        expect(scope.createActions[0].name).to.equal("Create");
+        expect(scope.createActions[0].url).to.equal("#/new");
+        expect(scope.createActions[0].action).to.equal("aa");
+        scope.clearCreateActions();
+        expect(scope.createActions.length).to.equal(0);
       });
     });
 

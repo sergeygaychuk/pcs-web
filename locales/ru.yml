@@ -45,7 +45,7 @@ ru:
         claim: присвоение
   action:
     put: Изменить
-    undefined: Создать
+    undefined: Действия
   session:
     prompt: Для работы в системе необходима регистрация
     sign_in: Вход

@@ -33,9 +33,23 @@ angular.module('pcs.controllers', [])
         return false;
       },
     };
-    $scope.prepareInformation = function(newUrl, klass) {
-      $scope.newURL = newUrl;
+    $scope.createActions = [];
+    $scope.singleBtnMode = function() {
+      return $scope.createActions.length === 1;
+    };
+    $scope.multiBtnMode = function() {
+      return $scope.createActions.length > 1;
+    };
+    $scope.setKlass = function(klass) {
       $scope.klass = klass;
+    };
+    $scope.clearCreateActions = function() {
+      $scope.createActions = [];
+    };
+    $scope.addCreateAction = function(name, url, action) {
+      $scope.createActions.push({
+        name: name, url: url, action: action
+      });
     };
     $scope.page = function (page, perPage, count) {
       $scope.pager.count = count;
@@ -71,10 +85,20 @@ angular.module('pcs.controllers', [])
       }
     }
   }])
+  .controller('ClaimDeviceCtrl', ['$scope', '$location', 'Device',
+      function($scope, $location, Device) {
+        $scope.page(1, 1, 0);
+        $scope.clearCreateActions();
+        $scope.setKlass("Device");
+        $scope.sn = "";
+        $scope.claim = function () {
+        }
+  }])
   .controller('NewDeviceCtrl', ['$scope', '$location', 'Device',
       function($scope, $location, Device) {
         $scope.page(1, 1, 0);
-        $scope.prepareInformation(null, null);
+        $scope.clearCreateActions();
+        $scope.setKlass("Device");
         $scope.device = new Device();
         $scope.save = function () {
           $scope.device.$save({}, function () {
@@ -89,7 +113,10 @@ angular.module('pcs.controllers', [])
       'Setpoints', 'DeviceHelper',
       function($scope, $routeParams, Device, State, Setpoints, DeviceHelper) {
         $scope.page(1, 1, 0);
-        $scope.prepareInformation('#/devices/new', 'Device');
+        $scope.clearCreateActions();
+        $scope.setKlass("Device");
+        $scope.addCreateAction('Create', '#/devices/new', 'create');
+        $scope.addCreateAction('Claim', '#/devices/claim', 'claim');
         $scope.device = Device.get({ deviceId: $routeParams.deviceId }, function () {
         });
         $scope.setpoints = Setpoints.get({ deviceId: $routeParams.deviceId }, function () {
@@ -106,7 +133,10 @@ angular.module('pcs.controllers', [])
   .controller('DevicesCtrl', ['$scope', '$location', 'Device',
       function($scope, $location, Device) {
         var page = Number($location.search().page) || 1;
-        $scope.prepareInformation('#/devices/new', 'Device');
+        $scope.clearCreateActions();
+        $scope.setKlass("Device");
+        $scope.addCreateAction('Create', '#/devices/new', 'create');
+        $scope.addCreateAction('Claim', '#/devices/claim', 'claim');
         $scope.devices = Device.query({page: page}, function () {
           var len = $scope.devices.length - 1;
           var count = $scope.devices.splice(len)[0].count;
@@ -116,7 +146,8 @@ angular.module('pcs.controllers', [])
   .controller('NewSiteCtrl', ['$scope', '$location', 'Site',
       function($scope, $location, Site) {
         $scope.page(1, 1, 0);
-        $scope.prepareInformation(null, null);
+        $scope.clearCreateActions();
+        $scope.setKlass("Site");
         $scope.site = new Site();
         $scope.save = function () {
           $scope.site.$save({}, function () {
@@ -130,7 +161,9 @@ angular.module('pcs.controllers', [])
   .controller('SiteCtrl', ['$scope', '$routeParams', 'Site', 'System',
       function($scope, $routeParams, Site, System) {
         var page = Number($routeParams.page) || 1;
-        $scope.prepareInformation('#/sites/' + $routeParams.siteId + '/systems/new', 'System');
+        $scope.clearCreateActions();
+        $scope.setKlass("System");
+        $scope.addCreateAction('Create', '#/sites/' + $routeParams.siteId + '/systems/new', 'create');
         $scope.site = Site.get({ siteId: $routeParams.siteId }, function () {
         });
         $scope.systems = System.query({siteId: $routeParams.siteId,
@@ -150,7 +183,9 @@ angular.module('pcs.controllers', [])
   .controller('SitesCtrl', ['$scope', '$location', 'Site',
       function($scope, $location, Site) {
         var page = Number($location.search().page) || 1;
-        $scope.prepareInformation('#/sites/new', 'Site');
+        $scope.clearCreateActions();
+        $scope.setKlass("Site");
+        $scope.addCreateAction('Create', '#/sites/new', 'create');
         $scope.sites = Site.query({page: page}, function () {
           var len = $scope.sites.length - 1;
           var count = $scope.sites.splice(len)[0].count;
@@ -164,7 +199,8 @@ angular.module('pcs.controllers', [])
       function($scope, $routeParams, $location, Site, System,
               SystemHelper) {
         $scope.page(1, 1, 0);
-        $scope.prepareInformation(null, null);
+        $scope.clearCreateActions();
+        $scope.setKlass("System");
         $scope.n = {};
         $scope.system = new System();
         $scope.system.site = $routeParams.siteId;
@@ -188,7 +224,8 @@ angular.module('pcs.controllers', [])
         $scope.state = { outputs: {} };
         $scope.n = {};
         $scope.page(1, 1, 0);
-        $scope.prepareInformation(null, null);
+        $scope.clearCreateActions();
+        $scope.setKlass("System");
         $scope.system = System.get({ siteId: $routeParams.siteId,
           systemId: $routeParams.systemId }, function () {
             $scope.device = Device.get({ deviceId: $scope.system.device }, function () {
@@ -229,7 +266,8 @@ angular.module('pcs.controllers', [])
   .controller('NewUserCtrl', ['$scope', '$location', 'User',
       function($scope, $location, User) {
         $scope.page(1, 1, 0);
-        $scope.prepareInformation(null, null);
+        $scope.clearCreateActions();
+        $scope.setKlass("User");
         $scope.user = new User();
         $scope.save = function () {
           $scope.user.$save({}, function () {
@@ -243,7 +281,9 @@ angular.module('pcs.controllers', [])
   .controller('UserCtrl', ['$scope', '$routeParams', 'User',
       function($scope, $routeParams, User) {
         $scope.page(1, 1, 0);
-        $scope.prepareInformation('#/users/new', 'User');
+        $scope.clearCreateActions();
+        $scope.setKlass("User");
+        $scope.addCreateAction('Create', '#/users/new', 'create');
         $scope.user = User.get({ userId: $routeParams.userId }, function () {
         });
         $scope.save = function () {
@@ -257,7 +297,9 @@ angular.module('pcs.controllers', [])
   .controller('UsersCtrl', ['$scope', '$location', 'User',
       function($scope, $location, User) {
         var page = Number($location.search().page) || 1;
-        $scope.prepareInformation('#/users/new', 'User');
+        $scope.clearCreateActions();
+        $scope.setKlass("User");
+        $scope.addCreateAction('Create', '#/users/new', 'create');
         $scope.users = User.query({page: page}, function () {
           var len = $scope.users.length - 1;
           var count = $scope.users.splice(len)[0].count;

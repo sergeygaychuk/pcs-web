@@ -35,7 +35,9 @@ describe("Site Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
     });
 
@@ -44,9 +46,10 @@ describe("Site Controllers", function() {
       expect(scope.page).to.have.been.calledWith(1, 1, 0);
     });
 
-    it("should clear prepareInformation", function() {
+    it("should call create action functions", function() {
       controller('NewSiteCtrl', { $scope: scope });
-      expect(scope.prepareInformation).to.have.been.calledWith(null, null);
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('Site');
     });
 
     it("should create site in scope", function() {
@@ -89,7 +92,9 @@ describe("Site Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
       routeParams = { siteId: 2 };
       httpBackend.expectGET('/sites/2').respond({_id: 2, name: "hello"});
@@ -98,8 +103,10 @@ describe("Site Controllers", function() {
       httpBackend.flush();
     });
 
-    it("should call prepareInformation with params", function() {
-      expect(scope.prepareInformation).to.have.been.calledWith('#/sites/2/systems/new', 'System');
+    it("should call create action functions", function() {
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('System');
+      expect(scope.addCreateAction).to.have.been.calledWith('Create', '#/sites/2/systems/new', 'create');
     });
 
     it("should load site", function() {
@@ -146,15 +153,19 @@ describe("Site Controllers", function() {
     beforeEach(function() {
       scope = {
         page: sinon.spy(),
-        prepareInformation: sinon.spy(),
+        clearCreateActions: sinon.spy(),
+        setKlass: sinon.spy(),
+        addCreateAction: sinon.spy(),
       };
 
       httpBackend.expectGET('/sites?page=1').respond([{_id: 1}, {_id: 2}, {count: 2}]);
       controller('SitesCtrl', { $scope: scope });
     });
 
-    it("should call prepareInformation", function() {
-      expect(scope.prepareInformation).to.have.been.calledWith('#/sites/new', 'Site');
+    it("should call create action functions", function() {
+      expect(scope.clearCreateActions).to.have.been.calledWith();
+      expect(scope.setKlass).to.have.been.calledWith('Site');
+      expect(scope.addCreateAction).to.have.been.calledWith('Create', '#/sites/new', 'create');
     });
 
     it("should setup pager", function() {
