@@ -2,31 +2,22 @@
   <table class="tp-data">
     <colgroup>
       <col class="tp-check">
-      <col class="tp-led">
-      <col class="tp-sender">
-      <col class="tp-mark">
+      <col class="col-xs-6 col-sm-4 col-xl-3">
+      <col class="col-xs-4 col-sm-3 col-xl-2">
       <col class="tp-text">
-      <col class="tp-spare">
-      <col class="tp-date">
     </colgroup>
     <tbody>
     <tr ng-repeat="device in devices">
       <td class="tp-check">
         <div class="tp-check"></div>
       </td>
-      <td>
-      </td>
       <td class="tp-sender">
         <a href="#/devices/{{device._id}}">{{device.name}}</a>
       </td>
       <td>
+        <span>{{device.sn}}</span>
       </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
+      <td></td>
     </tr>
     </tbody>
   </table>

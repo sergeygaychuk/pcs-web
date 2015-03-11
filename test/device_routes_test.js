@@ -336,6 +336,7 @@ describe('Device routes', function() {
         admin.save(function() {
           req.body = {
             name: 'created device',
+            sn: '1234658568665',
           }
           res.json = function(device) {
             expect(device._id).not.to.be.an('undefined');

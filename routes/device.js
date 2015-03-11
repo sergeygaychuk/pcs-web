@@ -19,7 +19,7 @@ module.exports.load = function (req, res, next, id) {
   })
 }
 
-var exportFields = '_id name';
+var exportFields = '_id name sn';
 
 function showDevice(req, res) {
   if (!req.device)
@@ -33,7 +33,7 @@ function showDevice(req, res) {
   res.json_ng(device);
 }
 
-var deviceFields = ['name'];
+var deviceFields = ['name', 'sn'];
 
 function updateDevice(req, res) {
   res.json(500, 'Not implemented');

@@ -17,6 +17,12 @@ var device_schema = new mongoose.Schema({
       msg: 'name is too long' },
     trim: true
   },
+  sn: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -25,6 +31,7 @@ var device_schema = new mongoose.Schema({
 });
 
 device_schema.index({ name: 1 }, { unique: 1 });
+device_schema.index({ sn: 1 });
 device_schema.index({ owner: 1, _id: 1 });
 
 var Device = mongoose.model('Device', device_schema);

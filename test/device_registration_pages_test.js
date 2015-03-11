@@ -181,6 +181,7 @@ describe('Registartion of device', function () {
       selBrowser.clickLink("a[href='#/devices/new']", function() {
         selBrowser.
           fill('name', "some new device").
+          fill('sn', "12245621223554225").
           pressButton("Сохранить").
           then(done, done);
       });
@@ -190,6 +191,7 @@ describe('Registartion of device', function () {
       selBrowser.clickLink("a[href='#/devices']", function() {
         expect(selBrowser.url).to.eql(url + '/#/devices');
         expect(selBrowser.text("table tr:nth-child(1) td.tp-sender a")).to.be("some new device");
+        expect(selBrowser.text("table tr:nth-child(1) td span")).to.be("12245621223554225");
         done();
       });
     });

@@ -61,6 +61,7 @@ var deviceCounter = 0;
 
 FactoryLady.define('device', Device, {
   name: function (cb) { cb(faker.lorem.words(1) + ++deviceCounter) },
+  sn: function (cb) { cb(faker.lorem.words(1) + ++deviceCounter) },
   owner: FactoryLady.assoc('admin', 'id')
 })
 
