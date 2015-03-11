@@ -78,9 +78,42 @@ function createDevice(req, res) {
   });
 }
 
+function claimDevice(req, res) {
+  if (!req.body.sn || req.body.sn.length === 0)
+    return res.send(500, "device sn is not defined");
+  Device
+  .find({'sn': req.body.sn}).sort({ name: 1 })
+  .exec(function (err, devices) {
+    if (err)
+      return res.send(500, err.toString());
+    if (devices.length === 0)
+      return res.send(404, "Device is not found");
+    if (devices.length > 1)
+      return res.send(500, "Internal server error");
+    if (devices[0].owner.equals(req.operator._id))
+      return res.send(404, "Device already claimed");
+    devices[0].owner = req.operator._id;
+    devices[0].save(function (err) {
+      if (err) {
+        return res.json(500, err);
+      }
+
+      var device = {};
+      exportFields.split(' ').forEach(function (f) {
+        device[f] = devices[0][f];
+      });
+      res.json(device);
+    });
+  });
+}
+
 module.exports.show = [ auth.authenticate,
                         auth.canAccessFor.bind(this, "Device", "show"),
                         showDevice];
+
+module.exports.claim = [ auth.authenticate,
+                        auth.canAccessFor.bind(this, "Device", "claim"),
+                        claimDevice];
 
 module.exports.update = [ auth.authenticate,
                           auth.requireAdmin,

@@ -10,7 +10,9 @@
 angular.module('pcs.services', ['ngResource'])
   .factory('Device', ['$resource',
       function ($resource) {
-        return $resource('/devices/:deviceId', { deviceId: '@_id' });
+        return $resource('/devices/:deviceId', { deviceId: '@_id' },
+                         {'claim': {method: "PUT", url: "/devices/claim"}}
+                        );
       }])
   .factory('Setpoints', ['$resource',
       function ($resource) {

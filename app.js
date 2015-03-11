@@ -113,6 +113,7 @@ app.post('/users', users.create);
 
 app.param('device', devices.load);
 app.get('/devices', devices.index);
+app.put('/devices/claim', devices.claim);
 app.get('/devices/:device', devices.show);
 app.post('/devices/:device', devices.update);
 app.post('/devices', devices.create);

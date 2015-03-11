@@ -15,6 +15,7 @@ function t(key, options) {
 
 var Superadmin = require('../models/superadmin');
 var User = require('../models/user');
+var Device = require('../models/device');
 var config = require('../config');
 
 describe('Registartion of device', function () {
@@ -76,7 +77,7 @@ describe('Registartion of device', function () {
     });
   });
 
-    var seller = null;
+  var seller = null;
   describe('superadmin assign right to create device', function() {
 
     before(function(done) {
@@ -133,17 +134,11 @@ describe('Registartion of device', function () {
     it("should see unchecked create, edit and show rights", function() {
       expect(saBrowser.query("input.rights-device-create:checked")).to.be(null);
       expect(saBrowser.query("input.rights-device-create")).not.to.be(null);
-      expect(saBrowser.query("input.rights-device-edit:checked")).to.be(null);
-      expect(saBrowser.query("input.rights-device-edit")).not.to.be(null);
-      expect(saBrowser.query("input.rights-device-show:checked")).to.be(null);
-      expect(saBrowser.query("input.rights-device-show")).not.to.be(null);
     });
 
     it("should add create device rights to user", function(done) {
       saBrowser
         .check(t('user.rights.device.create'))
-        .check(t('user.rights.device.show'))
-        .check(t('user.rights.device.edit'))
         .pressButton(t('action.put'))
         .then(done, done)
     });
@@ -152,8 +147,6 @@ describe('Registartion of device', function () {
       User.findById(seller._id, function(err, u) {
         if (err) throw "Some error on findById: " + err;
         expect(u.rights["Device"].indexOf("create") > -1).to.be.truthy;
-        expect(u.rights["Device"].indexOf("show") > -1).to.be.truthy;
-        expect(u.rights["Device"].indexOf("edit") > -1).to.be.truthy;
         seller = u;
       });
     });
@@ -263,6 +256,49 @@ describe('Registartion of device', function () {
 
       it("shouldn't see create device", function() {
         expect(userBrowser.query("a[href='#/devices/new']").parentNode.style.display).to.be("none");
+      });
+
+      it("should see claim device", function() {
+        expect(userBrowser.query("a[href='#/devices/claim']").parentNode.style.display).not.to.be("none");
+      });
+
+      it("should claim device", function(done) {
+        userBrowser.clickLink("a[href='#/devices/claim']", function() {
+          Device.find({sn: '12245621223554225'}).exec(function(err, devices) {
+            expect(err).to.be(null);
+            expect(devices.length).to.eql(1);
+            userBrowser
+            .fill('sn', '12245621223554225')
+            .pressButton("Закрепить")
+            .then(function() {
+              expect(userBrowser.success).to.be(true);
+              expect(userBrowser.location.hash).to.be('#/devices/' + devices[0]._id);
+              expect(userBrowser.query("input[name='name']").value).to.eql(devices[0].name);
+              expect(userBrowser.query("input[name='sn']").value).to.eql(devices[0].sn);
+            })
+            .then(done, done);
+          });
+        });
+      });
+
+      it("should see device in list", function(done) {
+        userBrowser.clickLink("a[href='#/devices']", function() {
+          expect(userBrowser.url).to.eql(url + '/#/devices');
+          expect(userBrowser.text("table tr:nth-child(1) td.tp-sender a")).to.be("some new device");
+          expect(userBrowser.text("table tr:nth-child(1) td span")).to.be("12245621223554225");
+          done();
+        });
+      });
+    });
+  });
+
+  describe("after claim device", function() {
+    it("seller should not see device", function(done) {
+      selBrowser.location.reload();
+      selBrowser.clickLink("a[href='#/devices']", function() {
+        expect(selBrowser.url).to.eql(url + '/#/devices');
+        expect(selBrowser.queryAll("table tr").length).to.be(0);
+        done();
       });
     });
   });

@@ -90,8 +90,13 @@ angular.module('pcs.controllers', [])
         $scope.page(1, 1, 0);
         $scope.clearCreateActions();
         $scope.setKlass("Device");
-        $scope.sn = "";
-        $scope.claim = function () {
+        $scope.device = new Device();
+        $scope.save = function () {
+          $scope.device.$claim({}, function () {
+            $location.path('/devices/' + $scope.device._id).replace();
+          }, function (res) {
+            console.log(res);
+          });
         }
   }])
   .controller('NewDeviceCtrl', ['$scope', '$location', 'Device',

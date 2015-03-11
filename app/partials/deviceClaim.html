@@ -3,9 +3,9 @@
     <form name="deviceClaimForm" accept-charset="UTF-8" class="form-horizontal">
       <div class="form-group">
         <label class="tp-photo control-label col-sm-3"><span class="glyphicon glyphicon-hdd"></span></label>
-        <label for="name" class="control-label hidden">Серийный номер</label>
+        <label for="sn" class="control-label hidden">Серийный номер</label>
         <div class="col-sm-9">
-          <input id="name" name="name" type="text" ng-model="sn" placeholder="Серийный номер" class="form-control input-lg">
+          <input id="sn" name="sn" type="text" ng-model="device.sn" placeholder="Серийный номер" class="form-control input-lg">
         </div>
       </div>
       <button name="submit" class="btn btn-sm btn-primary" ng-disabled="deviceClaimForm.$pristine" ng-click="save()">{{'Закрепить'}}</button>

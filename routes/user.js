@@ -117,7 +117,7 @@ function createUser(req, res) {
     req.user.admin = !!req.body['admin'];
   req.user.rights = {
     "User": ["show", "edit"],
-    "Device": ["index", "claim"]
+    "Device": ["index", "claim", "show", "edit"]
   };
   req.user.save(function (err) {
     if (err) {
@@ -144,7 +144,7 @@ function signupUser(req, res) {
   req.user.admin = true;
   req.user.rights = {
     "User": ["show", "edit"],
-    "Device": ["index", "claim"]
+    "Device": ["index", "claim", "show", "edit"]
   };
   req.user.save(function (err) {
     if (err) {
