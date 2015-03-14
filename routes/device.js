@@ -70,6 +70,7 @@ function createDevice(req, res) {
     req.device[f] = req.body[f];
   });
   req.device.owner = req.operator._id;
+  req.device.canClaim = true;
   req.device.save(function (err) {
     if (err) {
       return res.json(500, err);
@@ -90,9 +91,10 @@ function claimDevice(req, res) {
       return res.send(404, "Device is not found");
     if (devices.length > 1)
       return res.send(500, "Internal server error");
-    if (devices[0].owner.equals(req.operator._id))
+    if (devices[0].owner.equals(req.operator._id) || !devices[0].canClaim)
       return res.send(404, "Device already claimed");
     devices[0].owner = req.operator._id;
+    devices[0].canClaim = false;
     devices[0].save(function (err) {
       if (err) {
         return res.json(500, err);

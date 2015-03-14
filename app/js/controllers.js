@@ -95,7 +95,7 @@ angular.module('pcs.controllers', [])
           $scope.device.$claim({}, function () {
             $location.path('/devices/' + $scope.device._id).replace();
           }, function (res) {
-            console.log(res);
+            //console.log(res);
           });
         }
   }])

@@ -23,6 +23,7 @@ describe('Registartion of device', function () {
     saBrowser = new Browser({ site: global.url });
     selBrowser = new Browser({ site: global.url });
     userBrowser = new Browser({ site: global.url });
+    otherUserBrowser = new Browser({ site: global.url });
   });
 
   describe("when seller want to create devices", function() {
@@ -299,6 +300,87 @@ describe('Registartion of device', function () {
         expect(selBrowser.url).to.eql(url + '/#/devices');
         expect(selBrowser.queryAll("table tr").length).to.be(0);
         done();
+      });
+    });
+  });
+
+  describe("when other user want to claim devices", function() {
+    it("should signup", function(done) {
+      otherUserBrowser.visit('/signin').then(function() {
+        otherUserBrowser.clickLink('a[href="/signup"]').then(function() {
+          otherUserBrowser
+          .fill('name', 'User2')
+          .fill('email', 'user2@asutp.io')
+          .fill('password', '123456')
+          .fill('confirmation', '123456')
+          .pressButton(t('session.sign_up'))
+          .then(function() {
+            expect(otherUserBrowser.success).to.be(true);
+            expect(otherUserBrowser.queryAll('div.form-group.has-error').length).to.be(0);
+            expect(otherUserBrowser.location.pathname).to.be('/signin');
+            expect(otherUserBrowser.text('h2.form-signin-heading:nth-of-type(2)')).to.be(t('flash.create.success'));
+            expect(otherUserBrowser.text('title')).to.contain('Sign in');
+          })
+          .then(done, done)
+        });
+      });
+    });
+
+    describe("follow sign in", function() {
+      it("should accept credentials", function(done) {
+        otherUserBrowser
+        .fill('email', 'user2@asutp.io')
+        .fill('password', 123456)
+        .pressButton(t('session.sign_in'))
+        .then(function() {
+          expect(otherUserBrowser.success).to.be(true);
+          expect(otherUserBrowser.location.pathname).to.be('/');
+          expect(otherUserBrowser.text('title')).to.contain('User2');
+        })
+        .then(done, done);
+      });
+
+      it("should see devices pages", function() {
+        expect(otherUserBrowser.query("a[href='#/devices']")).not.to.be(null);
+        expect(otherUserBrowser.query("a[href='#/users']")).not.to.be(null);
+        expect(otherUserBrowser.query("a[href='#/sites']")).not.to.be(null);
+      });
+
+      it("shouldn't see devices", function() {
+        expect(otherUserBrowser.queryAll("table.tp-data tr").length).to.be(0);
+      });
+
+      it("shouldn't see create device", function() {
+        expect(otherUserBrowser.query("a[href='#/devices/new']").parentNode.style.display).to.be("none");
+      });
+
+      it("should see claim device", function() {
+        expect(otherUserBrowser.query("a[href='#/devices/claim']").parentNode.style.display).not.to.be("none");
+      });
+
+      it("shouldn't claim device", function(done) {
+        otherUserBrowser.clickLink("a[href='#/devices/claim']", function() {
+          Device.find({sn: '12245621223554225'}).exec(function(err, devices) {
+            expect(err).to.be(null);
+            expect(devices.length).to.eql(1);
+            otherUserBrowser
+            .fill('sn', '12245621223554225')
+            .pressButton("Закрепить")
+            .then(function() {}, function() {
+              expect(otherUserBrowser.success).to.be(true);
+              expect(otherUserBrowser.location.hash).to.be('#/devices/claim');
+              done();
+            });
+          });
+        });
+      });
+
+      it("shouldn't see device in list", function(done) {
+        otherUserBrowser.clickLink("a[href='#/devices']", function() {
+          expect(otherUserBrowser.url).to.eql(url + '/#/devices');
+          expect(otherUserBrowser.queryAll("table tr").length).to.be(0);
+          done();
+        });
       });
     });
   });

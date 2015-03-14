@@ -23,6 +23,10 @@ var device_schema = new mongoose.Schema({
     unique: true,
     trim: true
   },
+  canClaim: {
+    type: Boolean,
+    default: false
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
