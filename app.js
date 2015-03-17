@@ -19,6 +19,7 @@ var devices = require('./routes/device');
 var sites = require('./routes/site');
 var systems = require('./routes/system');
 var users = require('./routes/user');
+var right = require('./routes/right');
 var sessions = require('./routes/session');
 var auth = require('./routes/_auth');
 var authUser = auth.authenticate;
@@ -110,6 +111,12 @@ app.get('/users/:user', users.show);
 app.post('/users/:user', users.update);
 app.post('/signup', users.signup);
 app.post('/users', users.create);
+
+app.param('right', rights.load);
+app.get('/rights', rights.index);
+app.get('/rights/:right', rights.show);
+app.post('/rights/:right', rights.update);
+app.post('/rights', rights.create);
 
 app.param('device', devices.load);
 app.get('/devices', devices.index);
