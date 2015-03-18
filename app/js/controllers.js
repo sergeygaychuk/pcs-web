@@ -268,6 +268,49 @@ angular.module('pcs.controllers', [])
           });
         }
   }])
+  .controller('RightsCtrl', ['$scope', '$location', 'Right',
+      function($scope, $location, Right) {
+        var page = Number($location.search().page) || 1;
+        $scope.clearCreateActions();
+        $scope.setKlass("Right");
+        $scope.addCreateAction('Create', '#/rights/new', 'create');
+        $scope.rights = Right.query({page: page}, function () {
+          var len = $scope.rights.length - 1;
+          var count = $scope.rights.splice(len)[0].count;
+          $scope.page(page, 25, count);
+        });
+  }])
+  .controller('NewRightCtrl', ['$scope', '$location', 'Right',
+      function($scope, $location, Right) {
+        $scope.page(1, 1, 0);
+        $scope.clearCreateActions();
+        $scope.setKlass("Right");
+        $scope.right = new Right();
+        $scope.save = function () {
+          $scope.right.$save({}, function () {
+            $scope.rightForm.$setPristine();
+            $location.path('/rights/' + $scope.right._id).replace();
+          }, function (res) {
+            console.log(res);
+          });
+        }
+  }])
+  .controller('RightCtrl', ['$scope', '$routeParams', 'Right',
+      function($scope, $routeParams, Right) {
+        $scope.page(1, 1, 0);
+        $scope.clearCreateActions();
+        $scope.setKlass("Right");
+        $scope.addCreateAction('Create', '#/rights/new', 'create');
+        $scope.right = Right.get({ rightId: $routeParams.rightId }, function () {
+        });
+        $scope.save = function () {
+          $scope.right.$save({}, function () {
+            $scope.rightForm.$setPristine();
+          }, function (res) {
+            console.log(res);
+          });
+        }
+  }])
   .controller('NewUserCtrl', ['$scope', '$location', 'User',
       function($scope, $location, User) {
         $scope.page(1, 1, 0);

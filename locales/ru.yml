@@ -20,6 +20,24 @@ ru:
   site:
     self:
       plural: Объекты
+  right:
+    self:
+      plural: Права
+    name: Наименование
+    cans:
+      user:
+        name: Пользователи
+        index: список
+        create: создание
+        show: просмотр
+        edit: редактирование
+      device:
+        name: Устройства
+        index: список
+        create: создание
+        show: просмотр
+        edit: редактирование
+        claim: присвоение
   user:
     self:
       plural: Пользователи

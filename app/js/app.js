@@ -24,5 +24,8 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/users/new', {templateUrl: 'partials/user.html', controller: 'NewUserCtrl'});
   $routeProvider.when('/users/:userId', {templateUrl: 'partials/user.html', controller: 'UserCtrl'});
   $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersCtrl'});
+  $routeProvider.when('/rights', {templateUrl: 'partials/rights.html', controller: 'RightsCtrl'});
+  $routeProvider.when('/rights/new', {templateUrl: 'partials/right.html', controller: 'NewRightCtrl'});
+  $routeProvider.when('/rights/:rightId', {templateUrl: 'partials/right.html', controller: 'RightCtrl'});
   $routeProvider.otherwise({redirectTo: '/'});
 }]);

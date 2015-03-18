@@ -16,7 +16,7 @@ var right_schema = new mongoose.Schema({
       validator: validates.length({ max: 50 }),
       msg: 'name is too long' },
     trim: true },
-  cans: {
+  abilities: {
     type: {},
     default: {} }
 });
@@ -42,6 +42,8 @@ var right_schema = new mongoose.Schema({
 user_schema.index({ name: 1 });
 */
 var Right = mongoose.model('Right', right_schema);
+
+//define default schemas
 
 module.exports = Right;
 

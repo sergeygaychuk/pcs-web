@@ -15,7 +15,8 @@ function Superadmin() {
   this.superadmin = true;
   this.name = "Superadmin";
   this.rights = {
-    "User": ["index", "show", "create", "edit"]
+    "User": ["index", "show", "create", "edit"],
+    "Right": ["index", "show", "create", "edit"]
   };
 
   this.authenticate = function(password, cb) {

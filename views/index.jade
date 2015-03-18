@@ -80,6 +80,8 @@ html(ng-app="pcs")
             a(href='#/devices')= t('device.self.plural')
           li(pcs-operator-can="index", access-klass="User", operator="operator", ng-class="{ active: isActive('#/users') }")
             a(href='#/users')= t('user.self.plural')
+          li(pcs-operator-can="index", access-klass="Right", operator="operator", ng-class="{ active: isActive('#/rights') }")
+            a(href='#/rights')= t('right.self.plural')
       .col-xs-12.col-md-10.col-xl-14.tp-content
         div(ng-view)
         include _footer

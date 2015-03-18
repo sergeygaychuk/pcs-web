@@ -31,6 +31,10 @@ angular.module('pcs.services', ['ngResource'])
       function ($resource) {
         return $resource('/sites/:siteId/systems/:systemId', { siteId: '@site', systemId: '@_id' });
       }])
+  .factory('Right', ['$resource',
+      function ($resource) {
+        return $resource('/rights/:rightId', { rightId: '@_id' });
+      }])
   .factory('User', ['$resource',
       function ($resource) {
         return $resource('/users/:userId', { userId: '@_id' });

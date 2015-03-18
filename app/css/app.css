@@ -361,6 +361,26 @@ table.tp-data td.tp-date {
   text-align: right;
 }
 
+.tp-right {
+  font-size: 80%;
+}
+
+.tp-right form {
+  margin-top: 15px;
+}
+
+.tp-right .input-lg {
+  font-weight: bold;
+}
+
+.tp-right .form-group label.control-label {
+  overflow: hidden;
+}
+
+.tp-right form .btn {
+  float: right;
+}
+
 .tp-user {
   font-size: 80%;
 }

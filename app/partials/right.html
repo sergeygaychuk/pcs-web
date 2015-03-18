@@ -1,0 +1,21 @@
+<div class="row tp-right">
+  <div class="col-lg-6">
+    <form name="rightForm" accept-charset="UTF-8" class="form-horizontal">
+      <div class="form-group">
+        <label for="name" class="control-label col-sm-3">Наименование</label>
+        <div class="col-sm-9">
+          <input id="name" name="name" type="text" ng-model="right.name" placeholder="Наименование" class="form-control input-sm">
+        </div>
+      </div>
+      <div class="form-group" ng-repeat="(model,data) in operator.knownRights">
+        <label for="rights-{{model}}" class="control-label col-sm-3">Права: {{data.name}}</label>
+        <div class="col-sm-9">
+          <label class="col-sm-3" ng-repeat="(action, hr) in data.values">
+            {{hr}}<input type="checkbox" checklist-model="right.abilities[model]" checklist-value="action" class="form-control input-sm rights-{{model | lowercase}}-{{action | lowercase}}">
+          </label>
+        </div>
+      </div>
+      <button name="submit" class="btn btn-sm btn-primary" ng-disabled="rightForm.$pristine" ng-click="save()">{{(right._id) ? 'Изменить' : 'Создать'}}</button>
+    </form>
+  </div>
+</div>

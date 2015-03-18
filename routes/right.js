@@ -19,15 +19,13 @@ module.exports.load = function (req, res, next, id) {
 }
 
 function requireSuperadmin(req, res, next) {
-  if (!req.right)
-    return res.send(404);
   if (req.operator.superadmin)
     return next();
   res.send(403);
 }
 
 
-var exportFields = '_id name rights';
+var exportFields = '_id name abilities';
 
 function showRight(req, res) {
   if (!req.right)
@@ -39,9 +37,11 @@ function showRight(req, res) {
   res.json_ng(right);
 }
 
-var rightUpdateFields = ['name', 'rights'];
+var rightUpdateFields = ['name', 'abilities'];
 
 function updateRight(req, res) {
+  if (!req.right)
+    return res.send(404);
   rightUpdateFields.forEach(function (f) {
     req.right[f] = req.body[f];
   });
