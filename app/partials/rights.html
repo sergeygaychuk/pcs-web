@@ -14,6 +14,7 @@
         <a href="#/rights/{{right._id}}">{{right.name}}</a>
       </td>
       <td>
+        <span ng-if="right.autoAssigned" class="label label-danger">По умолчанию</span>
       </td>
     </tr>
     </tbody>

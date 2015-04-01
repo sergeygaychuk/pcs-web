@@ -25,7 +25,7 @@ function requireSuperadmin(req, res, next) {
 }
 
 
-var exportFields = '_id name abilities';
+var exportFields = '_id name abilities autoAssigned';
 
 function showRight(req, res) {
   if (!req.right)
@@ -37,7 +37,7 @@ function showRight(req, res) {
   res.json_ng(right);
 }
 
-var rightUpdateFields = ['name', 'abilities'];
+var rightUpdateFields = ['name', 'abilities', 'autoAssigned'];
 
 function updateRight(req, res) {
   if (!req.right)

@@ -16,31 +16,14 @@ var right_schema = new mongoose.Schema({
       validator: validates.length({ max: 50 }),
       msg: 'name is too long' },
     trim: true },
+  autoAssigned: {
+    type: Boolean,
+    default: false },
   abilities: {
     type: {},
     default: {} }
 });
 
-/*
- add default
-
-  req.user.rights = {
-    "User": ["show", "edit"],
-    "Device": ["index", "claim", "show", "edit"]
-  };
- * */
-
-/*user_schema.methods = {
-  can: function(action, klass) {
-    if (Object.keys(this.rights).length > 0) {
-      return this.rights[klass] !== undefined && this.rights[klass].indexOf(action) !== -1
-    }
-    return false;
-  },
-}
-
-user_schema.index({ name: 1 });
-*/
 var Right = mongoose.model('Right', right_schema);
 
 //define default schemas

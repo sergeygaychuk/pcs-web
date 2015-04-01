@@ -301,8 +301,7 @@ angular.module('pcs.controllers', [])
         $scope.clearCreateActions();
         $scope.setKlass("Right");
         $scope.addCreateAction('Create', '#/rights/new', 'create');
-        $scope.right = Right.get({ rightId: $routeParams.rightId }, function () {
-        });
+        $scope.right = Right.get({ rightId: $routeParams.rightId });
         $scope.save = function () {
           $scope.right.$save({}, function () {
             $scope.rightForm.$setPristine();
