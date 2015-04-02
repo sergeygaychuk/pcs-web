@@ -102,9 +102,9 @@ user_schema.pre('save', function(next) {
       console.log("Before save user: ", err);
       return next();
     }
-    rights.each(function(right) {
-      if (self.rights.indexOf(right) !== -1) {
-        self.rights.push(right);
+    rights.forEach(function(right) {
+      if (self.rights.indexOf(right._id) === -1) {
+        self.rights.push(right._id);
       }
     });
     next();
