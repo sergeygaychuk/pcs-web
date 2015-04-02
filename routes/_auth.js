@@ -44,9 +44,12 @@ module.exports.requireAdmin = function (req, res, next) {
 module.exports.canAccessFor = function (klass, action, req, res, next) {
   if (!req.operator)
     return res.send(401);
-  if (req.operator.can(action, klass))
-    return next();
-  res.send(403);
+  req.operator.can(action, klass, function(accessed) {
+    console.error(action, klass, accessed);
+    if (accessed)
+      return next();
+    res.send(403);
+  });
 }
 
 // vim:ts=2 sts=2 sw=2 et:

@@ -115,10 +115,7 @@ function createUser(req, res) {
   });
   if (req.operator.admin)
     req.user.admin = !!req.body['admin'];
-  req.user.rights = {
-    "User": ["show", "edit"],
-    "Device": ["index", "claim", "show", "edit"]
-  };
+  req.user.rights = [];
   req.user.save(function (err) {
     if (err) {
       return res.json(500, err);
@@ -142,10 +139,7 @@ function signupUser(req, res) {
     req.user[f] = req.body[f];
   });
   req.user.admin = true;
-  req.user.rights = {
-    "User": ["show", "edit"],
-    "Device": ["index", "claim", "show", "edit"]
-  };
+  req.user.rights = [];
   req.user.save(function (err) {
     if (err) {
       return signupFail(err);
