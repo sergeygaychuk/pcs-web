@@ -8,6 +8,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var validates = require('./_validates');
+var Right = require('./right');
 
 var user_schema = new mongoose.Schema({
   name: {
@@ -32,8 +33,8 @@ var user_schema = new mongoose.Schema({
       validator: validates.password({ length: { min: 6 } } ) },
     default: '' },
   rights: {
-    type: {},
-    default: {} }
+    type: [{ type: mongoose.Schema.ObjectId, ref: 'Right' }],
+    default: [] }
 });
 
 user_schema.virtual('password').get(function () {
@@ -61,11 +62,18 @@ user_schema.methods = {
     bcrypt.hash(password, 1, cb);
   },
 
-  can: function(action, klass) {
-    if (Object.keys(this.rights).length > 0) {
-      return this.rights[klass] !== undefined && this.rights[klass].indexOf(action) !== -1
+  can: function(action, klass, next) {
+    if (this.rights.length > 0) {
+      var self = this;
+      this.populate("rights", function() {
+        self.rights.each(function(right) {
+          if (right.abilities[klass] && right.abilities[klass].indexOf(action) !== -1) {
+            return next(true);
+          }
+        });
+      });
     }
-    return false;
+    return next(false);
   },
 }
 
@@ -80,6 +88,25 @@ user_schema.pre('save', function (next) {
     return next();
   this.encrypt(this._password, function (err, hash) {
     self.hash = hash;
+    next();
+  });
+});
+
+user_schema.pre('save', function(next) {
+  var self = this;
+  if (!this.isNew) {
+    return next();
+  }
+  Right.find({autoAssigned: true}, function(err, rights) {
+    if (err) {
+      console.log("Before save user: ", err);
+      return next();
+    }
+    rights.each(function(right) {
+      if (self.rights.indexOf(right) !== -1) {
+        self.rights.push(right);
+      }
+    });
     next();
   });
 });
