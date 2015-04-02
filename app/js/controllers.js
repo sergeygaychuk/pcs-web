@@ -24,11 +24,8 @@ angular.module('pcs.controllers', [])
     $scope.moment = moment;
     $scope.operator = {
       can: function(access, klass) {
-        if (this.rights && Object.keys(this.rights).length > 0) {
-          if (this.rights[klass] &&
-              this.rights[klass].indexOf(access) !== -1) {
-            return true;
-          }
+        if ($scope.operator.superadmin) {
+          return true;
         }
         return false;
       },
