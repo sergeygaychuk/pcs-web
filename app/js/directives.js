@@ -4,13 +4,6 @@
 
 
 angular.module('pcs.directives', []).
-  directive('pcsOperatorRights', [function() {
-    return function(scope, elm, attrs) {
-      if (elm.text().length > 0) {
-        scope.operator.rights = JSON.parse(elm.text());
-      }
-    };
-  }]).
   directive('pcsOperatorAdmin', [function() {
     return function(scope, elm, attrs) {
       if (elm.text() === 'true') {

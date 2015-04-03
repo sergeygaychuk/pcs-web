@@ -22,7 +22,6 @@ html(ng-app="pcs")
               p(style="display:none", pcs-operator-id)= operator._id
               p(style="display:none", pcs-operator-admin)= operator.admin
               p(style="display:none", pcs-operator-superadmin)= operator.superadmin
-              p(style="display:none", pcs-operator-rights)= JSON.stringify(operator.rights)
               span.caret
             ul.dropdown-menu
               li

@@ -13,7 +13,7 @@ angular.module('pcs.controllers', [])
       return viewLocation === '#' + $location.path();
     }
   }])
-  .controller('PageCtrl', ['$scope', '$location', function($scope, $location) {
+  .controller('PageCtrl', ['$scope', '$location', 'Right', function($scope, $location, Right) {
     $scope.pager = {
       first: 0,
       last: 0,
@@ -30,6 +30,11 @@ angular.module('pcs.controllers', [])
         return false;
       },
     };
+    $scope.$watch("operator._id", function(val) {
+      if (val) {
+        $scope.operator.rights = Right.byUser({ userId: val });
+      }
+    });
     $scope.createActions = [];
     $scope.singleBtnMode = function() {
       return $scope.createActions.length === 1;
