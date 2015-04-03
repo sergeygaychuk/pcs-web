@@ -111,6 +111,7 @@ app.get('/users/:user', users.show);
 app.post('/users/:user', users.update);
 app.post('/signup', users.signup);
 app.post('/users', users.create);
+app.get('/users/:user/rights', rights.userRights);
 
 app.param('right', rights.load);
 app.get('/rights', rights.index);
