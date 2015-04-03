@@ -23,14 +23,6 @@ html(ng-app="pcs")
               p(style="display:none", pcs-operator-admin)= operator.admin
               p(style="display:none", pcs-operator-superadmin)= operator.superadmin
               p(style="display:none", pcs-operator-rights)= JSON.stringify(operator.rights)
-              p(style="display:none", ng-init="operator.knownRights = {\
-              'User': { name: '"+t('user.rights.user.name')+"', values: {\
-              index: '"+t('user.rights.user.index')+"', show: '"+t('user.rights.user.show')+"', \
-              create: '"+t('user.rights.user.create')+"', edit: '"+t('user.rights.user.edit')+"'}},\
-              'Device': { name: '"+t('user.rights.device.name')+"', values: {\
-              index: '"+t('user.rights.device.index')+"', show: '"+t('user.rights.device.show')+"', \
-              create: '"+t('user.rights.device.create')+"', edit: '"+t('user.rights.device.edit')+"', \
-              claim: '"+t('user.rights.device.claim')+"'}}}")
               span.caret
             ul.dropdown-menu
               li
