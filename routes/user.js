@@ -53,7 +53,7 @@ function registrationUser(req, res) {
   })
 }
 
-var exportFields = '_id name email admin rights';
+var exportFields = '_id name email admin';
 
 function showUser(req, res) {
   if (!req.user)
@@ -115,7 +115,9 @@ function createUser(req, res) {
   });
   if (req.operator.admin)
     req.user.admin = !!req.body['admin'];
-  req.user.rights = [];
+  if (req.operator.superadmin && req.operator._id.toString() != req.user._id.toString()) {
+    req.user.rights = req.body.rights;
+  }
   req.user.save(function (err) {
     if (err) {
       return res.json(500, err);
