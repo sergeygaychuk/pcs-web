@@ -282,6 +282,9 @@ angular.module('pcs.controllers', [])
           $scope.page(page, 25, count);
         });
   }])
+  .controller('RightsModalCtrl', ['$scope', 'Right', 'excludedItems',
+      function($scope, Right, excludedItems) {
+  }])
   .controller('NewRightCtrl', ['$scope', '$location', 'Right',
       function($scope, $location, Right) {
         $scope.page(1, 1, 0);
@@ -331,8 +334,8 @@ angular.module('pcs.controllers', [])
           });
         }
   }])
-  .controller('UserCtrl', ['$scope', '$routeParams', 'User', 'Right',
-      function($scope, $routeParams, User, Right) {
+  .controller('UserCtrl', ['$scope', '$routeParams', 'User', 'Right', '$modal',
+      function($scope, $routeParams, User, Right, $modal) {
         var page = Number($routeParams.page) || 1;
         $scope.clearCreateActions();
         $scope.setKlass("User");
@@ -344,6 +347,26 @@ angular.module('pcs.controllers', [])
           $scope.page(page, 25, count);
         });
         $scope.user = User.get({ userId: $routeParams.userId });
+
+        $scope.addRules = function() {
+          $scope.userRights.$promise.then(function() {
+            var modalInstance = $modal.open({
+              templateUrl: 'partials/rights_modal.html',
+              controller: 'RightsModalCtrl',
+              size: 'lg',
+              resolve: {
+                excludedItems: function () {
+                  return $scope.userRights;
+                }
+              }
+            });
+            modalInstance.result.then(function (selectedItems) {
+              $scope.userRights.concat(selectedItems);
+            }, function () {
+              //do nothing
+            });
+          });
+        };
         $scope.save = function () {
           $scope.user.rights = $scope.userRights.map(function(right) {
             return right._id;
