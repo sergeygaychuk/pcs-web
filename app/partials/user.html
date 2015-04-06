@@ -1,5 +1,5 @@
 <div class="row tp-user">
-  <div class="col-lg-6">
+  <div class="col-lg-5 tp-user">
     <form name="userForm" accept-charset="UTF-8" class="form-horizontal">
       <div class="form-group">
         <label class="tp-photo control-label col-sm-3"><span class="glyphicon glyphicon-user"></span></label>
@@ -32,15 +32,30 @@
           <input id="confirmation" name="confirmation" type="password" ng-model="user.confirmation" placeholder="Подтверждение" class="form-control input-sm">
         </div>
       </div>
-      <div ng-if="user._id !== operator._id && operator.superadmin" class="form-group" ng-repeat="(right,data) in operator.knownRights">
-        <label for="rights-{{right}}" class="control-label col-sm-3">Права: {{data.name}}</label>
-        <div class="col-sm-9">
-          <label class="col-sm-3" ng-repeat="(action, hr) in data.values">
-            {{hr}}<input type="checkbox" checklist-model="user.rights[right]" checklist-value="action" class="form-control input-sm rights-{{right | lowercase}}-{{action | lowercase}}">
-          </label>
-        </div>
-      </div>
       <button name="submit" class="btn btn-sm btn-primary" ng-hide="user._id === operator._id && operator.superadmin" ng-disabled="userForm.$pristine" ng-click="save()">{{(user._id) ? 'Изменить' : 'Создать'}}</button>
     </form>
+  </div>
+  <div class="tp-data col-lg-7" ng-if="user._id !== operator._id && operator.superadmin">
+    <table class="tp-data">
+      <colgroup>
+        <col class="tp-check">
+        <col class="col-xs-6 col-sm-4">
+        <col class="col-xs-4 col-sm-3">
+        <col class="tp-text">
+      </colgroup>
+      <tbody>
+      <tr ng-repeat="right in userRights">
+        <td class="tp-check">
+          <div class="tp-check"></div>
+        </td>
+        <td class="tp-sender">{{right.name}}</td>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
   </div>
 </div>

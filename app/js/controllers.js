@@ -317,8 +317,12 @@ angular.module('pcs.controllers', [])
         $scope.page(1, 1, 0);
         $scope.clearCreateActions();
         $scope.setKlass("User");
+        $scope.userRights = [];
         $scope.user = new User();
         $scope.save = function () {
+          $scope.user.rights = $scope.userRights.map(function(right) {
+            return right._id;
+          });
           $scope.user.$save({}, function () {
             $scope.userForm.$setPristine();
             $location.path('/users/' + $scope.user._id).replace();
@@ -327,15 +331,23 @@ angular.module('pcs.controllers', [])
           });
         }
   }])
-  .controller('UserCtrl', ['$scope', '$routeParams', 'User',
-      function($scope, $routeParams, User) {
-        $scope.page(1, 1, 0);
+  .controller('UserCtrl', ['$scope', '$routeParams', 'User', 'Right',
+      function($scope, $routeParams, User, Right) {
+        var page = Number($routeParams.page) || 1;
         $scope.clearCreateActions();
         $scope.setKlass("User");
         $scope.addCreateAction('Create', '#/users/new', 'create');
-        $scope.user = User.get({ userId: $routeParams.userId }, function () {
+        $scope.userRights = Right.byUser({ userId: $routeParams.userId,
+          page: page}, function() {
+          var len = $scope.userRights.length - 1;
+          var count = $scope.userRights.splice(len)[0].count;
+          $scope.page(page, 25, count);
         });
+        $scope.user = User.get({ userId: $routeParams.userId });
         $scope.save = function () {
+          $scope.user.rights = $scope.userRights.map(function(right) {
+            return right._id;
+          });
           $scope.user.$save({}, function () {
             $scope.userForm.$setPristine();
           }, function (res) {
