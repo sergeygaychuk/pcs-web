@@ -282,8 +282,27 @@ angular.module('pcs.controllers', [])
           $scope.page(page, 25, count);
         });
   }])
-  .controller('RightsModalCtrl', ['$scope', 'Right', 'excludedItems',
-      function($scope, Right, excludedItems) {
+  .controller('RightsModalCtrl', ['$scope', '$modalInstance', 'Right', 'excludedItems',
+      function($scope, $modalInstance, Right, excludedItems) {
+        var excludedRightIds = excludedItems.map(function(right) {
+          return right._id;
+        });
+        $scope.selected = [];
+        $scope.rights = Right.query(function () {
+          var len = $scope.rights.length - 1;
+          var count = $scope.rights.splice(len)[0].count;
+        });
+        $scope.filterById = function(right) {
+          return excludedRightIds.indexOf(right._id) === -1;
+        };
+         $scope.done = function () {
+           $modalInstance.close($scope.selected);
+         };
+
+         $scope.cancel = function () {
+           $modalInstance.dismiss('cancel');
+         };
+
   }])
   .controller('NewRightCtrl', ['$scope', '$location', 'Right',
       function($scope, $location, Right) {
