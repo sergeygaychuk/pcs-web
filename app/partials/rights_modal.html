@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h3 class="modal-title">Выбор правил</h3>
+</div>
+<div class="modal-body">
+  <table class="tp-data">
+    <colgroup>
+      <col class="tp-check">
+      <col class="col-xs-6 col-sm-4 col-xl-3">
+      <col class="tp-text">
+    </colgroup>
+    <tbody>
+    <tr ng-repeat="right in rights | filter:filterById">
+      <td class="tp-check">
+        <div class="tp-check"></div>
+      </td>
+      <td class="tp-sender">{{right.name}}</td>
+      <td>
+        <span ng-if="right.autoAssigned" class="label label-danger">По умолчанию</span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="done()">OK</button>
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>
+
