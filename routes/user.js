@@ -6,16 +6,23 @@
  */
 
 var User = require('../models/user');
+var Superadmin = require('../models/superadmin');
 var auth = require('./_auth');
 var per_page = 25;
 
 module.exports.load = function (req, res, next, id) {
-  User.findOne({ _id: id }, function (err, user) {
-    if (err || !user)
-      return res.send(404);
-    req.user = user;
-    next();
-  })
+  Superadmin.findById(id, function(err, user) {
+    if (user) {
+      req.user = user;
+      return next();
+    }
+    User.findOne({ _id: id }, function (err, user) {
+      if (err || !user)
+        return res.send(404);
+      req.user = user;
+      next();
+    });
+  });
 }
 
 function requireAdminOrSelf(req, res, next) {
