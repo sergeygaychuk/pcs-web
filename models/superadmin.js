@@ -11,6 +11,7 @@ var config = require('../config');
 
 function Superadmin() {
   this._id = config.saId;
+  this.email = config.saEmail;
   this.admin = false;
   this.superadmin = true;
   this.name = "Superadmin";
