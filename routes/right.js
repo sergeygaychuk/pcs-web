@@ -79,6 +79,9 @@ function userRights(req, res) {
   if (!req.user) {
     return res.send(500, "User is not specified");
   }
+  if (req.user.superadmin) {
+    return res.json_ng([{count: 0}]);
+  }
   var page = Number(req.query.page) || 1;
   page--;
   if (page < 0)
