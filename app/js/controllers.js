@@ -295,14 +295,13 @@ angular.module('pcs.controllers', [])
         $scope.filterById = function(right) {
           return excludedRightIds.indexOf(right._id) === -1;
         };
-         $scope.done = function () {
-           $modalInstance.close($scope.selected);
-         };
+        $scope.done = function () {
+          $modalInstance.close($scope.selected);
+        };
 
-         $scope.cancel = function () {
-           $modalInstance.dismiss('cancel');
-         };
-
+        $scope.cancel = function () {
+          $modalInstance.dismiss('cancel');
+        };
   }])
   .controller('NewRightCtrl', ['$scope', '$location', 'Right',
       function($scope, $location, Right) {
