@@ -117,6 +117,13 @@ function createRight(req, res) {
   });
 }
 
+function knownAbilities(req, res) {
+  res.json({
+    "Device": ["index", "create", "update", "show", "claim"],
+    "User": ["index", "create", "update", "show"],
+  });
+}
+
 module.exports.show = [ auth.authenticate,
                         requireSuperadmin,
                         showRight];
@@ -128,6 +135,10 @@ module.exports.update = [ auth.authenticate,
 module.exports.index = [ auth.authenticate,
                          requireSuperadmin,
                          indexRights];
+
+module.exports.knownAbilities = [ auth.authenticate,
+                                  requireSuperadmin,
+                                  knownAbilities];
 
 module.exports.create = [ auth.authenticate,
                           requireSuperadmin,
