@@ -390,6 +390,14 @@ angular.module('pcs.controllers', [])
             });
           });
         };
+        $scope.removeRules = function() {
+          angular.forEach($scope.selected, function(item) {
+            $scope.userRights.splice($scope.userRights.indexOf(item), 1);
+          });
+          $scope.page($scope.pager.page, 25, $scope.pager.count - $scope.selected.length);
+          $scope.selected.splice(0, $scope.selected.length);
+          $scope.userForm.$setDirty();
+        };
         $scope.save = function () {
           $scope.user.rights = $scope.userRights.map(function(right) {
             return right._id;
