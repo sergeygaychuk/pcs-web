@@ -366,6 +366,7 @@ angular.module('pcs.controllers', [])
           var count = $scope.userRights.splice(len)[0].count;
           $scope.page(page, 25, count);
         });
+        $scope.selected = [];
         $scope.user = User.get({ userId: $routeParams.userId });
 
         $scope.addRules = function() {
@@ -381,7 +382,9 @@ angular.module('pcs.controllers', [])
               }
             });
             modalInstance.result.then(function (selectedItems) {
-              $scope.userRights.concat(selectedItems);
+              Array.prototype.push.apply($scope.userRights, selectedItems);
+              $scope.page($scope.pager.page, 25, $scope.pager.count + 1);
+              $scope.userForm.$setDirty();
             }, function () {
               //do nothing
             });

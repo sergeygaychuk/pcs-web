@@ -46,7 +46,7 @@
       <tbody>
       <tr ng-repeat="right in userRights">
         <td class="tp-check">
-          <div class="tp-check"></div>
+          <div><input type="checkbox" checklist-model="selected" checklist-value="right"></div>
         </td>
         <td class="tp-sender">{{right.name}}</td>
         <td>
