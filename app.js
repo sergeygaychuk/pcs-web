@@ -115,6 +115,7 @@ app.get('/users/:user/rights', rights.userRights);
 
 app.param('right', rights.load);
 app.get('/rights', rights.index);
+app.get('/rights/default', rights.defaultRights);
 app.get('/rights/abilities/known', rights.knownAbilities);
 app.get('/rights/:right', rights.show);
 app.post('/rights/:right', rights.update);
