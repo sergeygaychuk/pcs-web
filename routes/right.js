@@ -75,6 +75,27 @@ function indexRights(req, res) {
   });
 }
 
+function defaultRights(req, res) {
+  var page = Number(req.query.page) || 1;
+  page--;
+  if (page < 0)
+    page = 0;
+  Right.count(function (err, count) {
+    if (err)
+      return res.send(500, err.toString());
+    if ((page * per_page) > count)
+      page = Math.floor((count - 1) / per_page);
+    Right
+    .find({autoAssigned: true}, exportFields).sort({ name: 1 }).skip(page*per_page).limit(per_page)
+    .exec(function (err, rights) {
+      if (err)
+        return res.send(500, err.toString());
+      rights.push({ count: count });
+      res.json_ng(rights);
+    });
+  });
+}
+
 function userRights(req, res) {
   if (!req.user) {
     return res.send(500, "User is not specified");
@@ -131,6 +152,11 @@ module.exports.show = [ auth.authenticate,
 module.exports.update = [ auth.authenticate,
                           requireSuperadmin,
                           updateRight];
+
+
+module.exports.defaultRights = [ auth.authenticate,
+                                 requireSuperadmin,
+                                 defaultRights];
 
 module.exports.index = [ auth.authenticate,
                          requireSuperadmin,
