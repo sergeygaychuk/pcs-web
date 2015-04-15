@@ -335,12 +335,48 @@ angular.module('pcs.controllers', [])
           });
         }
   }])
-  .controller('NewUserCtrl', ['$scope', '$location', 'User',
-      function($scope, $location, User) {
-        $scope.page(1, 1, 0);
+  .controller('NewUserCtrl', ['$scope', '$location', 'User', '$routeParams', 'Right', '$modal',
+      function($scope, $location, User, $routeParams, Right, $modal) {
+        var page = Number($routeParams.page) || 1;
         $scope.clearCreateActions();
         $scope.setKlass("User");
-        $scope.userRights = [];
+        $scope.userRights = Right.defaultRights({page: page}, function() {
+          var len = $scope.userRights.length - 1;
+          var count = $scope.userRights.splice(len)[0].count;
+          $scope.page(page, 25, count);
+        });
+        $scope.selected = [];
+
+        $scope.addRules = function() {
+          $scope.userRights.$promise.then(function() {
+            var modalInstance = $modal.open({
+              templateUrl: 'partials/rights_modal.html',
+              controller: 'RightsModalCtrl',
+              size: 'lg',
+              resolve: {
+                excludedItems: function () {
+                  return $scope.userRights;
+                }
+              }
+            });
+            modalInstance.result.then(function (selectedItems) {
+              Array.prototype.push.apply($scope.userRights, selectedItems);
+              $scope.page($scope.pager.page, 25, $scope.pager.count + 1);
+              $scope.userForm.$setDirty();
+            }, function () {
+              //do nothing
+            });
+          });
+        };
+        $scope.removeRules = function() {
+          angular.forEach($scope.selected, function(item) {
+            $scope.userRights.splice($scope.userRights.indexOf(item), 1);
+          });
+          $scope.page($scope.pager.page, 25, $scope.pager.count - $scope.selected.length);
+          $scope.selected.splice(0, $scope.selected.length);
+          $scope.userForm.$setDirty();
+        };
+
         $scope.user = new User();
         $scope.save = function () {
           $scope.user.rights = $scope.userRights.map(function(right) {
