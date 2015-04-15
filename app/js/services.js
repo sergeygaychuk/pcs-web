@@ -35,6 +35,7 @@ angular.module('pcs.services', ['ngResource'])
       function ($resource) {
         return $resource('/rights/:rightId', { rightId: '@_id' }, {
           byUser: { method: "GET", url: "/users/:userId/rights", isArray: true },
+          defaultRights: { method: "GET", url: "/rights/default", isArray: true },
           knownAbilities: { method: "GET", url: "/rights/abilities/known" }
         });
       }])
