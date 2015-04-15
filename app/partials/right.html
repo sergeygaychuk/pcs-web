@@ -13,11 +13,11 @@
           <input id="auto_assigned" name="autoAssigned" type="checkbox" ng-model="right.autoAssigned" class="form-control input-sm">
         </div>
       </div>
-      <div class="form-group" ng-repeat="(model,data) in operator.knownRights">
-        <label for="rights-{{model}}" class="control-label col-sm-3">Права: {{data.name}}</label>
+      <div class="form-group" ng-repeat="(model,data) in abilities">
+        <label for="rights-{{model}}" class="control-label col-sm-3">Права: {{model}}</label>
         <div class="col-sm-9">
-          <label class="col-sm-3" ng-repeat="(action, hr) in data.values">
-            {{hr}}<input type="checkbox" checklist-model="right.abilities[model]" checklist-value="action" class="form-control input-sm rights-{{model | lowercase}}-{{action | lowercase}}">
+          <label class="col-sm-3" ng-repeat="action in data">
+            {{action}}<input type="checkbox" checklist-model="right.abilities[model]" checklist-value="action" class="form-control input-sm rights-{{model | lowercase}}-{{action | lowercase}}">
           </label>
         </div>
       </div>
