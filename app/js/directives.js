@@ -28,6 +28,11 @@ angular.module('pcs.directives', []).
       if (scope.operator.can(attrs.pcsOperatorCan, attrs.accessKlass)) {
         return elm.show();
       }
+      scope.$watchCollection("operator.rights", function() {
+        if (scope.operator.can(attrs.pcsOperatorCan, attrs.accessKlass)) {
+          return elm.show();
+        }
+      });
       elm.hide();
     };
     return {
