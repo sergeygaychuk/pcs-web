@@ -110,24 +110,34 @@ function userRights(req, res) {
   if (req.user.superadmin) {
     return res.json_ng([{count: 0}]);
   }
-  var page = Number(req.query.page) || 1;
-  page--;
-  if (page < 0)
-    page = 0;
-  Right.where("_id").in(req.user.rights).count(function (err, count) {
-    if (err)
-      return res.send(500, err.toString());
-    if ((page * per_page) > count)
-      page = Math.floor((count - 1) / per_page);
+  if (req.user._id.equals(req.operator._id)) {
     Right.where("_id").in(req.user.rights)
-    .find({}, exportFields).sort({ name: 1 }).skip(page*per_page).limit(per_page)
+    .find({}, exportFields).sort({ name: 1 })
     .exec(function (err, rights) {
       if (err)
         return res.send(500, err.toString());
-      rights.push({ count: count });
       res.json_ng(rights);
     });
-  });
+  } else {
+    var page = Number(req.query.page) || 1;
+    page--;
+    if (page < 0)
+      page = 0;
+    Right.where("_id").in(req.user.rights).count(function (err, count) {
+      if (err)
+        return res.send(500, err.toString());
+      if ((page * per_page) > count)
+        page = Math.floor((count - 1) / per_page);
+      Right.where("_id").in(req.user.rights)
+      .find({}, exportFields).sort({ name: 1 }).skip(page*per_page).limit(per_page)
+      .exec(function (err, rights) {
+        if (err)
+          return res.send(500, err.toString());
+        rights.push({ count: count });
+        res.json_ng(rights);
+      });
+    });
+  }
 }
 
 var rightFields = rightUpdateFields;
