@@ -65,15 +65,19 @@ user_schema.methods = {
   can: function(action, klass, next) {
     if (this.rights.length > 0) {
       var self = this;
-      this.populate("rights", function() {
-        self.rights.each(function(right) {
+      this.populate("rights", function(err, user) {
+        var has = user.rights.some(function(right) {
           if (right.abilities[klass] && right.abilities[klass].indexOf(action) !== -1) {
-            return next(true);
+            next(true);
+            return true;
           }
+          return false;
         });
+        if (!has) {
+          return next(false);
+        }
       });
     }
-    return next(false);
   },
 }
 

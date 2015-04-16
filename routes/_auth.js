@@ -45,9 +45,9 @@ module.exports.canAccessFor = function (klass, action, req, res, next) {
   if (!req.operator)
     return res.send(401);
   req.operator.can(action, klass, function(accessed) {
-    console.error(action, klass, accessed);
-    if (accessed)
+    if (accessed) {
       return next();
+    }
     res.send(403);
   });
 }

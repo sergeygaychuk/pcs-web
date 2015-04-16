@@ -24,6 +24,13 @@ function requireSuperadmin(req, res, next) {
   res.send(403);
 }
 
+function requireSuperadminOrSelf(req, res, next) {
+  if (req.operator.superadmin)
+    return next();
+  if (req.user && req.operator._id.equals(req.user._id))
+    return next();
+  res.send(403);
+}
 
 var exportFields = '_id name abilities autoAssigned';
 
@@ -171,7 +178,7 @@ module.exports.create = [ auth.authenticate,
                           createRight];
 
 module.exports.userRights = [ auth.authenticate,
-                              requireSuperadmin,
+                              requireSuperadminOrSelf,
                               auth.canAccessFor.bind(this, "User", "show"),
                               userRights];
 
