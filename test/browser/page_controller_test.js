@@ -28,7 +28,9 @@ describe("Page Controller", function() {
     beforeEach(inject(function($location, $controller) {
       location = $location;
       controller = $controller;
-      scope = {};
+      scope = {
+        $watch: sinon.spy()
+      };
       controller('PageCtrl', { $scope: scope });
     }));
 

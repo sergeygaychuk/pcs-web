@@ -24,7 +24,7 @@ describe("User Controllers", function() {
   });
 
   describe("NewUserCtrl", function() {
-    var scope, location, controller;
+    var scope, location, controller, controlerInject;
 
     beforeEach(inject(function($location, $controller) {
       location = $location;
@@ -35,22 +35,23 @@ describe("User Controllers", function() {
         setKlass: sinon.spy(),
         addCreateAction: sinon.spy(),
       };
+      controlerInject = {
+        $scope: scope,
+        $routeParams: {},
+        $modal: {}
+      };
+
+      httpBackend.expectGET('/rights/default?page=1').respond([{count: 0}]);
     }));
 
-    it("should call page with params", function() {
-      controller('NewUserCtrl', { $scope: scope });
-      expect(scope.page).to.have.been.calledWith(1, 1, 0);
-    });
-
-
     it("should call create action functions", function() {
-      controller('NewUserCtrl', { $scope: scope });
+      controller('NewUserCtrl', controlerInject);
       expect(scope.clearCreateActions).to.have.been.calledWith();
       expect(scope.setKlass).to.have.been.calledWith('User');
     });
 
     it("should create user", function() {
-      controller('NewUserCtrl', { $scope: scope });
+      controller('NewUserCtrl', controlerInject);
       expect(scope.user).to.exist();
     });
 
@@ -60,17 +61,17 @@ describe("User Controllers", function() {
           $setPristine: sinon.spy(),
         };
 
-        httpBackend.expectPOST('/users', { name: "hello" }).respond({_id: 2, name: "hello"});
+        httpBackend.expectPOST('/users', { name: "hello", rights: [] }).respond({_id: 2, name: "hello"});
       });
 
       it("should save user", function() {
-        controller('NewUserCtrl', { $scope: scope });
+        controller('NewUserCtrl', controlerInject);
         scope.user.name = "hello";
         scope.save();
       });
 
       it("should clear form", function() {
-        controller('NewUserCtrl', { $scope: scope });
+        controller('NewUserCtrl', controlerInject);
         scope.user.name = "hello";
         scope.save();
         httpBackend.flush();
@@ -78,7 +79,7 @@ describe("User Controllers", function() {
       });
 
       it("should change location path", function() {
-        controller('NewUserCtrl', { $scope: scope });
+        controller('NewUserCtrl', controlerInject);
         scope.user.name = "hello";
         scope.save();
         httpBackend.flush();
@@ -100,24 +101,20 @@ describe("User Controllers", function() {
         addCreateAction: sinon.spy(),
       };
       routeParams = { userId: 2 };
+      httpBackend.expectGET('/users/2/rights?page=1').respond([{count: 0}]);
       httpBackend.expectGET('/users/2').respond({_id: 2, name: "hello"});
     }));
 
-    it("should call page with params", function() {
-      controller('UserCtrl', { $scope: scope, $routeParams: routeParams });
-      expect(scope.page).to.have.been.calledWith(1, 1, 0);
-    });
-
 
     it("should call create action functions", function() {
-      controller('UserCtrl', { $scope: scope, $routeParams: routeParams });
+      controller('UserCtrl', { $scope: scope, $routeParams: routeParams, $modal: {} });
       expect(scope.clearCreateActions).to.have.been.calledWith();
       expect(scope.setKlass).to.have.been.calledWith('User');
       expect(scope.addCreateAction).to.have.been.calledWith('Create', '#/users/new', 'create');
     });
 
     it("should create user", function() {
-      controller('UserCtrl', { $scope: scope, $routeParams: routeParams });
+      controller('UserCtrl', { $scope: scope, $routeParams: routeParams, $modal: {} });
       expect(scope.user).to.exist();
     });
 
@@ -129,17 +126,17 @@ describe("User Controllers", function() {
       });
 
       it("should save user", function() {
-        controller('UserCtrl', { $scope: scope, $routeParams: routeParams });
+        controller('UserCtrl', { $scope: scope, $routeParams: routeParams, $modal: {} });
         httpBackend.flush();
-        httpBackend.expectPOST('/users/2', { _id: 2, name: "world" }).respond({_id: 2, name: "hello"});
+        httpBackend.expectPOST('/users/2', { _id: 2, name: "world", rights: [] }).respond({_id: 2, name: "hello"});
         scope.user.name = "world";
         scope.save();
       });
 
       it("should clear form", function() {
-        controller('UserCtrl', { $scope: scope, $routeParams: routeParams });
+        controller('UserCtrl', { $scope: scope, $routeParams: routeParams, $modal: {} });
         httpBackend.flush();
-        httpBackend.expectPOST('/users/2', { _id: 2, name: "world" }).respond({_id: 2, name: "hello"});
+        httpBackend.expectPOST('/users/2', { _id: 2, name: "world", rights: [] }).respond({_id: 2, name: "hello"});
         scope.user.name = "world";
         scope.save();
         httpBackend.flush();
