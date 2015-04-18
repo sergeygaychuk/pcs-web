@@ -81,15 +81,21 @@ angular.module('pcs.controllers', [])
     }
   }])
   .controller('AccessController', ['$scope', '$location', function($scope, $location) {
-    if ($scope.operator) {
-      if ($scope.operator.can("index", "User")) {
-        $location.path('/users');
-      } else if ($scope.operator.can("index", "Site")) {
-        $location.path('/sites');
-      } else if ($scope.operator.can("index", "Device")) {
-        $location.path('/devices');
+    var selector = function() {
+      if ($scope.operator) {
+        if ($scope.operator.can("index", "User")) {
+          $location.path('/users');
+        } else if ($scope.operator.can("index", "Site")) {
+          $location.path('/sites');
+        } else if ($scope.operator.can("index", "Device")) {
+          $location.path('/devices');
+        }
       }
-    }
+    };
+    selector();
+    $scope.$watchCollection("operator.rights", function() {
+      selector();
+    });
   }])
   .controller('ClaimDeviceCtrl', ['$scope', '$location', 'Device',
       function($scope, $location, Device) {
