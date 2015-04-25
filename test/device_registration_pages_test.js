@@ -16,14 +16,51 @@ function t(key, options) {
 var Superadmin = require('../models/superadmin');
 var User = require('../models/user');
 var Device = require('../models/device');
+var Right = require('../models/right');
 var config = require('../config');
 
 describe('Registartion of device', function () {
-  before( function () {
+  before( function (done) {
     saBrowser = new Browser({ site: global.url });
     selBrowser = new Browser({ site: global.url });
     userBrowser = new Browser({ site: global.url });
     otherUserBrowser = new Browser({ site: global.url });
+
+    //setup rights
+    var accessProfile = {
+      name: "Profile access",
+      autoAssigned: true,
+      abilities: {
+        "User": ["show", "update"]
+      }
+    };
+
+    var claimDevice = {
+      name: "Claim device",
+      autoAssigned: true,
+      abilities: {
+        "Device": ["claim", "show", "index", "update"]
+      }
+    };
+
+    var manageDevices = {
+      name: "Manage devices",
+      autoAssigned: false,
+      abilities: {
+        "Device": ["create", "show", "index", "update"]
+      }
+    };
+
+    (new Right(accessProfile)).save(function(err) {
+      if (err) throw err;
+      (new Right(claimDevice)).save(function(err) {
+        if (err) throw err;
+        (new Right(manageDevices)).save(function(err) {
+          if (err) throw err;
+          done();
+        });
+      });
+    });
   });
 
   describe("when seller want to create devices", function() {
@@ -111,55 +148,68 @@ describe('Registartion of device', function () {
       expect(saBrowser.query("table.tp-data td a[href='#/users/" + seller._id + "']").textContent).to.be(seller.name);
     });
 
+
     it("should see initial rights for user", function(done) {
       expect(saBrowser.url).to.eql(url + '/#/users');
       saBrowser.clickLink("table.tp-data td a[href='#/users/" + seller._id + "']", function() {
         expect(saBrowser.location.hash).to.be('#/users/' + seller._id);
-        expect(saBrowser.query("input[name='name']").value).to.eql(seller.name);
         expect(saBrowser.query("input[name='email']").value).to.eql(seller.email);
-        expect(saBrowser.query("input[name='admin']:disabled")).to.be(null);
-        expect(saBrowser.query("input[name='admin']:checked")).not.to.be(null);
-        expect(saBrowser.query("input[name='password']").value).to.eql("");
-        expect(saBrowser.query("input[name='confirmation']").value).to.eql("");
         expect(saBrowser.text("form[name='userForm'] > button")).to.eql("Изменить");
         expect(saBrowser.query("form[name='userForm'] > button:disabled")).not.to.be(null);
-        Object.keys(seller.rights).forEach(function(right) {
-          seller.rights[right].forEach(function(action) {
-            expect(saBrowser.query("input.rights-" + right.toLowerCase() + "-" + action.toLowerCase() + ":checked")).not.to.be(null);
-          });
-        });
+        var rights = saBrowser.queryAll("div.row div.tp-data table tr");
+        expect(rights.length).to.be(2);
+        var rightsTexts = [
+          saBrowser.text(saBrowser.queryAll("td", rights[0])[1]),
+          saBrowser.text(saBrowser.queryAll("td", rights[1])[1])
+        ];
+        expect(rightsTexts).to.eql(['Claim device', 'Profile access']);
         done();
       });
     });
 
-    it("should see unchecked create, edit and show rights", function() {
-      expect(saBrowser.query("input.rights-device-create:checked")).to.be(null);
-      expect(saBrowser.query("input.rights-device-create")).not.to.be(null);
-    });
-
     it("should add create device rights to user", function(done) {
-      saBrowser
-        .check(t('user.rights.device.create'))
-        .pressButton(t('action.put'))
-        .then(done, done)
+      expect(saBrowser.query("div.modal")).to.be(null);
+      expect(saBrowser.text("div.row > div.tp-data > div > button.btn-success")).to.eql("Добавить");
+      expect(saBrowser.query("div.row > div.tp-data > div > button.btn-success:disabled")).to.be(null);
+      saBrowser.
+        pressButton("div.row > div.tp-data > div > button.btn-success").
+        then(function() {
+          expect(saBrowser.text("div.modal h3.modal-title")).to.eql("Выбор правил");
+          var rights = saBrowser.queryAll("div.modal div.modal-body table tr");
+          expect(rights.length).to.eql(1);
+          expect(saBrowser.text(saBrowser.queryAll("td", rights[0])[1])).to.eql("Manage devices");
+          saBrowser.check("div.modal div.modal-body table tr:nth-child(1) input");
+          expect(saBrowser.text("div.modal div.modal-footer button.btn-primary")).to.eql("Применить");
+          saBrowser.
+            pressButton("div.modal div.modal-footer button.btn-primary").
+            then(function() {
+              var rights = saBrowser.queryAll("div.row div.tp-data table tr");
+              expect(rights.length).to.be(3);
+              var rightsTexts = [
+                saBrowser.text(saBrowser.queryAll("td", rights[0])[1]),
+                saBrowser.text(saBrowser.queryAll("td", rights[1])[1]),
+                saBrowser.text(saBrowser.queryAll("td", rights[2])[1])
+              ];
+              expect(rightsTexts).to.eql(['Claim device', 'Profile access', 'Manage devices']);
+              saBrowser.pressButton(t('action.put')).then(done, done);
+            });
+        });
     });
 
-    it("should see changes on user", function() {
+    it("should save data to db", function(done) {
       User.findById(seller._id, function(err, u) {
         if (err) throw "Some error on findById: " + err;
-        expect(u.rights["Device"].indexOf("create") > -1).to.be.truthy;
-        seller = u;
+        u.populate("rights", function(err, user) {
+          if (err) throw "Some error on findById: " + err;
+          var names = user.rights.map(function(right) {
+            return right.name;
+          });
+          expect(names).to.eql(['Claim device', 'Profile access', 'Manage devices']);
+          seller = user;
+          done();
+        });
       });
     });
-/*
-    it("should signout", function() {
-      saBrowser
-      .pressButton(t('session.sign_out'))
-      .then(function() {
-        expect(saBrowser.location.pathname).to.be('/signin');
-        expect(saBrowser.text('title')).to.contain('Sign in');
-      });
-    });*/
   });
 
   describe("when seller accept rights", function() {
