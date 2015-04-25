@@ -13,6 +13,7 @@ var User = require('../../models/user');
 var Device = require('../../models/device');
 var Site = require('../../models/site');
 var System = require('../../models/system');
+var Right = require('../../models/right');
 
 var async = require('async');
 var FactoryLady = require('factory-lady');
@@ -33,6 +34,7 @@ User.find().remove(function() {});
 Device.find().remove(function() {});
 Site.find().remove(function() {});
 System.find().remove(function() {});
+Right.find().remove(function() {});
 
 FactoryLady.define('user', User, {
   password: 'password',
