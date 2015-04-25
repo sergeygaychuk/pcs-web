@@ -49,35 +49,6 @@ describe('Registartion of device', function () {
       });
     });
 
-    describe("when want to create default rights", function() {
-      it("should create default rights for view profile", function(done) {
-        expect(saBrowser.url).to.eql(url + '/#/rights');
-        saBrowser.clickLink("a[href='#/rights/new']", function() {
-          expect(saBrowser.location.hash).to.be('#/rights/new');
-          saBrowser
-          .fill('name', 'Profile access')
-          .check('autoAssigned')
-          .check('.rights-user-show')
-          .pressButton('Создать')
-          .then(done, done)
-        });
-      });
-
-      it("should create default rights for claim devices", function(done) {
-        saBrowser.clickLink("a[href='#/rights/new']", function() {
-          expect(saBrowser.location.hash).to.be('#/rights/new');
-          saBrowser
-          .fill('name', 'Claim device')
-          .check('autoAssigned')
-          .check('.rights-device-claim')
-          .check('.rights-device-show')
-          .check('.rights-device-index')
-          .pressButton('Создать')
-          .then(done, done)
-        });
-      });
-    });
-
     describe("when want to create none default rights", function() {
       it("should create rights for manage devices", function(done) {
         saBrowser.clickLink("a[href='#/rights/new']", function() {

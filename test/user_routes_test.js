@@ -10,6 +10,7 @@ var expect = require('expect.js');
 
 var User = require('../models/user');
 var Routes = require('../routes/user');
+var Right = require('../models/right');
 var router = require('./support/router');
 
 describe('User routes', function() {
@@ -102,7 +103,7 @@ describe('User routes', function() {
         var res = {
           locals: {},
           json_ng: function(u) {
-            expect(Object.keys(u)).to.eql(['_id', 'name', 'email', 'admin', 'rights']);
+            expect(Object.keys(u)).to.eql(['_id', 'name', 'email', 'admin']);
             expect(u._id).to.eql(operator._id);
             expect(u.name).to.eql(operator.name);
             expect(u.email).to.eql(operator.email);
@@ -425,10 +426,17 @@ describe('User routes', function() {
       var req, res;
 
       before(function(done) {
-        admin.rights["User"].push("index");
-        admin.markModified('rights');
-        admin.save(function() {
-          done();
+        (new Right({
+          name: "View users list",
+          abilities: {
+            "User": ["index"]
+          }
+        })).save(function(err, r) {
+          admin.rights.push(r._id);
+          admin.markModified('rights');
+          admin.save(function() {
+            done();
+          });
         });
       });
 
@@ -540,10 +548,18 @@ describe('User routes', function() {
       var req, res;
 
       before(function(done) {
-        admin.rights["User"].push("create");
-        admin.markModified('rights');
-        admin.save(function() {
-          done();
+        (new Right({
+          name: "Create user",
+          abilities: {
+            "User": ["create"]
+          }
+        })).save(function(err, r) {
+          if (err) throw err;
+          admin.rights.push(r._id);
+          admin.markModified('rights');
+          admin.save(function() {
+            done();
+          });
         });
       });
 

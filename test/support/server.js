@@ -36,10 +36,35 @@ Site.find().remove(function() {});
 System.find().remove(function() {});
 Right.find().remove(function() {});
 
+//fill by default
+var accessProfile = {
+  name: "Profile access",
+  autoAssigned: true,
+  abilities: {
+    "User": ["show", "edit"]
+  }
+};
+
+(new Right(accessProfile)).save(function(err) {
+  if (err) throw err;
+});
+
+var claimDevice = {
+  name: "Claim device",
+  autoAssigned: true,
+  abilities: {
+    "Device": ["claim", "show", "index", "edit"]
+  }
+};
+
+(new Right(claimDevice)).save(function(err) {
+  if (err) throw err;
+});
+
+
 FactoryLady.define('user', User, {
   password: 'password',
   confirmation: 'password',
-  rights: [],
   name: function (cb) { cb(faker.name.findName()) },
   email: function (cb) { cb('user-' + ++userCounter + '@example.com') }
 })
@@ -47,7 +72,6 @@ FactoryLady.define('user', User, {
 FactoryLady.define('admin', User, {
   password: 'password',
   confirmation: 'password',
-  rights: [],
   admin: true,
   name: function (cb) { cb(faker.name.findName()) },
   email: function (cb) { cb('admin-' + ++userCounter + '@example.com') }

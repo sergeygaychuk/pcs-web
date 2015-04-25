@@ -26,22 +26,6 @@ describe('Registartion of device', function () {
     userBrowser = new Browser({ site: global.url });
     otherUserBrowser = new Browser({ site: global.url });
 
-    //setup rights
-    var accessProfile = {
-      name: "Profile access",
-      autoAssigned: true,
-      abilities: {
-        "User": ["show", "update"]
-      }
-    };
-
-    var claimDevice = {
-      name: "Claim device",
-      autoAssigned: true,
-      abilities: {
-        "Device": ["claim", "show", "index", "update"]
-      }
-    };
 
     var manageDevices = {
       name: "Manage devices",
@@ -51,15 +35,9 @@ describe('Registartion of device', function () {
       }
     };
 
-    (new Right(accessProfile)).save(function(err) {
+    (new Right(manageDevices)).save(function(err) {
       if (err) throw err;
-      (new Right(claimDevice)).save(function(err) {
-        if (err) throw err;
-        (new Right(manageDevices)).save(function(err) {
-          if (err) throw err;
-          done();
-        });
-      });
+      done();
     });
   });
 
