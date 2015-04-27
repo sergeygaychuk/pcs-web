@@ -19,6 +19,7 @@ var devices = require('./routes/device');
 var sites = require('./routes/site');
 var systems = require('./routes/system');
 var users = require('./routes/user');
+var orgs = require('./routes/organization');
 var sessions = require('./routes/session');
 var auth = require('./routes/_auth');
 var authUser = auth.authenticate;
@@ -116,6 +117,8 @@ app.get('/signup', users.new);
 app.get('/users/:user', users.show);
 app.post('/users/:user', users.update);
 app.post('/users', users.create);
+
+app.get('/organizations', orgs.index);
 
 app.param('device', devices.load);
 app.get('/devices', devices.index);
