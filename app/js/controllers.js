@@ -467,12 +467,16 @@ angular.module('pcs.controllers', [])
           $scope.page(page, 25, count);
         });
   }])
-  .controller('OrganizationsCtrl', ['$scope',
-      function($scope) {
+  .controller('OrganizationsCtrl', ['$scope', '$location', 'Organization',
+      function($scope, $location, Organization) {
+        var page = Number($location.search().page) || 1;
         $scope.clearCreateActions();
         $scope.setKlass("Organization");
-        $scope.page(1, 1, 0);
-        $scope.users = [];
+        $scope.organizations = Organization.query({page: page}, function () {
+          var len = $scope.organizations.length - 1;
+          var count = $scope.organizations.splice(len)[0].count;
+          $scope.page(page, 25, count);
+        });
   }]);
 
 // vim:ts=2 sts=2 sw=2 et:
