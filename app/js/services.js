@@ -33,6 +33,10 @@ angular.module('pcs.services', ['ngResource'])
       function ($resource) {
         return $resource('/users/:userId', { userId: '@_id' });
       }])
+  .factory('Organization', ['$resource',
+      function ($resource) {
+        return $resource('/organizations');
+      }])
   .factory('ServerEvents', [
       function() {
         return {

@@ -21,22 +21,25 @@ function indexOrganizations(req, res) {
 
   if (page < 0)
     page = 0;
-  var baseScope = Organization.find({owner: req.operator._id});
-  baseScope.count(function (err, count) {
-    if (err)
-      return res.send(500, err.toString());
-    if ((page * per_page) > count)
-      page = Math.floor((count - 1) / per_page);
-    baseScope
-      .populate('owner', userExportFields)
-      .sort({ name: 1 })
-      .skip(page*per_page)
-      .limit(per_page)
-      .exec(function (err, orgs) {
-        if (err)
-          return res.send(500, err.toString());
-        orgs.push({ count: count });
-        res.json_ng(orgs);
+  var baseFilter = { owner: req.operator._id };
+  Organization
+    .find(baseFilter)
+    .count(function (err, count) {
+      if (err)
+        return res.send(500, err.toString());
+      if ((page * per_page) > count)
+        page = Math.floor((count - 1) / per_page);
+      Organization
+        .find(baseFilter, orgExportFields)
+        .populate('owner', userExportFields)
+        .sort({ name: 1 })
+        .skip(page*per_page)
+        .limit(per_page)
+        .exec(function (err, orgs) {
+          if (err)
+            return res.send(500, err.toString());
+          orgs.push({ count: count });
+          res.json_ng(orgs);
       });
   });
 }
