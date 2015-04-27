@@ -241,6 +241,12 @@ angular.module('pcs.controllers', [])
           var count = $scope.users.splice(len)[0].count;
           $scope.page(page, 25, count);
         });
+  }])
+  .controller('OrganizationsCtrl', ['$scope',
+      function($scope) {
+        $scope.page(1, 1, 0);
+        $scope.setNewURL(null);
+        $scope.organizations = [];
   }]);
 
 // vim:ts=2 sts=2 sw=2 et:
