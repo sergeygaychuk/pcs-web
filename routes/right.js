@@ -18,12 +18,6 @@ module.exports.load = function (req, res, next, id) {
   })
 }
 
-function requireSuperadmin(req, res, next) {
-  if (req.operator.superadmin)
-    return next();
-  res.send(403);
-}
-
 function requireSuperadminOrSelf(req, res, next) {
   if (req.operator.superadmin)
     return next();
@@ -163,28 +157,28 @@ function knownAbilities(req, res) {
 }
 
 module.exports.show = [ auth.authenticate,
-                        requireSuperadmin,
+                        auth.requireSuperadmin,
                         showRight];
 
 module.exports.update = [ auth.authenticate,
-                          requireSuperadmin,
+                          auth.requireSuperadmin,
                           updateRight];
 
 
 module.exports.defaultRights = [ auth.authenticate,
-                                 requireSuperadmin,
+                                 auth.requireSuperadmin,
                                  defaultRights];
 
 module.exports.index = [ auth.authenticate,
-                         requireSuperadmin,
+                         auth.requireSuperadmin,
                          indexRights];
 
 module.exports.knownAbilities = [ auth.authenticate,
-                                  requireSuperadmin,
+                                  auth.requireSuperadmin,
                                   knownAbilities];
 
 module.exports.create = [ auth.authenticate,
-                          requireSuperadmin,
+                          auth.requireSuperadmin,
                           createRight];
 
 module.exports.userRights = [ auth.authenticate,

@@ -20,6 +20,7 @@ var sites = require('./routes/site');
 var systems = require('./routes/system');
 var users = require('./routes/user');
 var rights = require('./routes/right');
+var orgs = require('./routes/organization');
 var sessions = require('./routes/session');
 var auth = require('./routes/_auth');
 var authUser = auth.authenticate;
@@ -112,6 +113,8 @@ app.post('/users/:user', users.update);
 app.post('/signup', users.signup);
 app.post('/users', users.create);
 app.get('/users/:user/rights', rights.userRights);
+
+app.get('/organizations', orgs.index);
 
 app.param('right', rights.load);
 app.get('/rights', rights.index);

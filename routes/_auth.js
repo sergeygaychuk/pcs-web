@@ -41,6 +41,12 @@ module.exports.requireAdmin = function (req, res, next) {
   res.send(403);
 }
 
+module.exports.requireSuperadmin = function (req, res, next) {
+  if (req.operator.superadmin)
+    return next();
+  res.send(403);
+};
+
 module.exports.canAccessFor = function (klass, action, req, res, next) {
   if (!req.operator)
     return res.send(401);
