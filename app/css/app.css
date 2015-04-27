@@ -85,25 +85,6 @@ body.user {
   height: 100%;
 }
 
-header {
-  height: 50px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-header.navbar {
-  padding: 0px 15px;
-  background: #f1f1f1;
-  border: 0px solid #e5e5e5;
-  border-radius: 0px;
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 9px;
-}
-
-header .nav {
-  font-size: 13px;
-}
-
 #user .dropdown-menu {
   min-width: 210px;
   right: 15px;
@@ -125,6 +106,10 @@ header .nav {
 
 .banner-signin > .navbar-brand {
   float: none;
+}
+
+nav.navbar {
+  background: #f1f1f1;
 }
 
 .navbar-brand, .navbar-brand:hover, .navbar-brand:focus {
