@@ -7,6 +7,7 @@
 
 var expect = require('expect.js');
 var Device = require('../models/device');
+var Right = require('../models/right');
 var Routes = require('../routes/device');
 var router = require('./support/router');
 
@@ -77,30 +78,15 @@ describe('Device routes', function() {
         req = { session: { operatorId: operator._id } };
       });
 
-      it("should deny for operators without show rights", function(done) {
+      it("should return 404 if no device", function(done) {
         var res = {
           locals: {},
           send: function(code) {
-            expect(code).to.be(403);
+            expect(code).to.be(404);
             done();
           },
         };
         router(Routes.show, req, res);
-      });
-
-      it("should return 404 if no device", function(done) {
-        operator.rights["Device"].push("show");
-        operator.markModified("rights");
-        operator.save(function() {
-          var res = {
-            locals: {},
-            send: function(code) {
-              expect(code).to.be(404);
-              done();
-            },
-          };
-          router(Routes.show, req, res);
-        });
       });
 
       it("should return 401 unauthorized", function(done) {
@@ -153,34 +139,19 @@ describe('Device routes', function() {
         req = { session: { operatorId: admin._id } };
       });
 
-      it("should deny without rights", function(done) {
-        res = {
+      it("should fail", function(done) {
+        var res = {
           locals: {},
-          send: function(code) {
-            expect(code).to.eql(403);
+          json: function(code) {
+            expect(code).to.eql(500);
             done();
           },
         };
+        req.body = {
+          name: "Some name",
+        };
+        req.device = device;
         router(Routes.update, req, res);
-      });
-
-      it("should fail", function(done) {
-        admin.rights["Device"].push("edit");
-        admin.markModified("rights");
-        admin.save(function() {
-          var res = {
-            locals: {},
-            json: function(code) {
-              expect(code).to.eql(500);
-              done();
-            },
-          };
-          req.body = {
-            name: "Some name",
-          };
-          req.device = device;
-          router(Routes.update, req, res);
-        });
       });
     });
   });
@@ -214,69 +185,6 @@ describe('Device routes', function() {
         };
         router(Routes.index, req, res);
       });
-/*
-      it("should sort results by name", function(done) {
-        var original = [];
-        res.json_ng = function(devices) {
-          var fetched = devices.slice(0, -1).map(function(item) {
-            return item._id.toString();
-          });
-          expect(fetched).to.eql(original);
-          done();
-        };
-        Device.find({}, "_id").sort({name: 1}).limit(25).exec(function(err, devices) {
-          original = devices.map(function(item) { return item._id.toString(); });
-          router(Routes.index, req, res);
-        });
-      });
-
-      it("should retrieve requested page", function(done) {
-        var original = [];
-        res.json_ng = function(devices) {
-          var fetched = devices.slice(0, -1).map(function(item) {
-            return item._id.toString();
-          });
-          expect(fetched).to.eql(original);
-          done();
-        };
-        req.query.page = 2;
-        Device.find({}, "_id").sort({name: 1}).skip(25).limit(25).exec(function(err, devices) {
-          original = devices.map(function(item) { return item._id.toString(); });
-          router(Routes.index, req, res);
-        });
-      });
-
-      it("should retrieve first one if page is less then 1", function(done) {
-        var original = [];
-        res.json_ng = function(devices) {
-          var fetched = devices.slice(0, -1).map(function(item) {
-            return item._id.toString();
-          });
-          expect(fetched).to.eql(original);
-          done();
-        };
-        req.query.page = 0;
-        Device.find({}, "_id").sort({name: 1}).limit(25).exec(function(err, devices) {
-          original = devices.map(function(item) { return item._id.toString(); });
-          router(Routes.index, req, res);
-        });
-      });
-
-      it("should retrieve last one if page is too big", function(done) {
-        var original = [];
-        res.json_ng = function(devices) {
-          var fetched = devices.slice(0, -1).map(function(item) {
-            return item._id.toString();
-          });
-          expect(fetched).to.eql(original);
-          done();
-        };
-        req.query.page = last + 1;
-        Device.find({}, "_id").sort({name: 1}).skip((last - 1) * 25).limit(25).exec(function(err, devices) {
-          original = devices.map(function(item) { return item._id.toString(); });
-          router(Routes.index, req, res);
-        });
-      });*/
     });
   });
 
@@ -319,32 +227,33 @@ describe('Device routes', function() {
         };
       });
 
-      it("should deny administrators without create rights", function(done) {
-        var res = {
-          locals: {},
-          send: function(code) {
-            expect(code).to.be(403);
+      before(function(done) {
+        (new Right({
+          name: "Create device",
+          abilities: {
+            "Device": ["create"]
+          }
+        })).save(function(err, r) {
+          if (err) throw err;
+          admin.rights.push(r._id);
+          admin.markModified('rights');
+          admin.save(function() {
             done();
-          },
-        };
-        router(Routes.create, req, res);
+          });
+        });
       });
 
       it("should create device with valid params", function(done) {
-        admin.rights["Device"].push("create");
-        admin.markModified("rights");
-        admin.save(function() {
-          req.body = {
-            name: 'created device',
-            sn: '1234658568665',
-          }
-          res.json = function(device) {
-            expect(device._id).not.to.be.an('undefined');
-            expect(device.name).to.be(req.body.name);
-            done();
-          };
-          router(Routes.create, req, res);
-        });
+        req.body = {
+          name: 'created device',
+          sn: '1234658568665',
+        }
+        res.json = function(device) {
+          expect(device._id).not.to.be.an('undefined');
+          expect(device.name).to.be(req.body.name);
+          done();
+        };
+        router(Routes.create, req, res);
       });
 
       it("should fail when name is already taken", function(done) {
