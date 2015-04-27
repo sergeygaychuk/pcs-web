@@ -11,25 +11,26 @@ html(ng-app="pcs")
     link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.css')
     link(rel='stylesheet', href='css/app.css')
   body(ng-controller="PageCtrl")
-    header.navbar
-      .navbar-header
-        a.navbar-brand(href='/') asutp.io
-      nav.collapse.navbar-collapse
-        ul.nav.navbar-nav.navbar-right
-          li.dropdown
-            button(type='button', data-toggle='dropdown').btn.dropdown-toggle
-              = operator.name
-              p(style="display:none", pcs-operator-id)= operator._id
-              p(style="display:none", pcs-operator-admin)= operator.admin
-              span.caret
-            ul.dropdown-menu
-              li
-                a(href='#/users/#{operator._id}') Profile
-              li
-                form(method='post', action='/signout', accept-charset="UTF-8").form-signout
-                  input(type='hidden',name='_method',value='delete')
-                  input(type='hidden',name='_csrf',value=csrf)
-                  input(type='submit',name='submit',value=t('session.sign_out'))
+    nav.navbar
+      .container-fluid
+        .navbar-header
+          a.navbar-brand(href='/') asutp.io
+        .collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-right
+            li.dropdown
+              button(type='button', data-toggle='dropdown').btn.dropdown-toggle
+                = operator.name
+                p(style="display:none", pcs-operator-id)= operator._id
+                p(style="display:none", pcs-operator-admin)= operator.admin
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href='#/users/#{operator._id}') Профиль
+                li
+                  form(method='post', action='/signout', accept-charset="UTF-8").form-signout
+                    input(type='hidden',name='_method',value='delete')
+                    input(type='hidden',name='_csrf',value=csrf)
+                    input(type='submit',name='submit',value=t('session.sign_out'))
       .tp-flash-container
         .clearfix
         .tp-flash
