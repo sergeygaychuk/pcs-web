@@ -15,12 +15,22 @@ function t(key, options) {
 
 var Superadmin = require('../models/superadmin');
 var User = require('../models/user');
+var Right = require('../models/right');
 var config = require('../config');
 
-describe('Registartion of device', function () {
+describe('Manage rights on user', function () {
   before( function () {
     saBrowser = new Browser({ site: global.url });
     selBrowser = new Browser({ site: global.url });
+  });
+
+  after(function(done) {
+    Right.find({name: "Manage devices"}).exec(function(err, rights) {
+      if (err) throw err;
+      if (rights.length === 1) {
+        rights[0].remove(done);
+      }
+    });
   });
 
   describe('superadmin want to create default rights', function() {
@@ -71,8 +81,8 @@ describe('Registartion of device', function () {
       selBrowser.visit('/signin').then(function() {
         selBrowser.clickLink('a[href="/signup"]').then(function() {
           selBrowser
-          .fill('name', 'Seller')
-          .fill('email', 'seller@asutp.io')
+          .fill('name', 'Some Seller')
+          .fill('email', 'seller.some@asutp.io')
           .fill('password', '123456')
           .fill('confirmation', '123456')
           .pressButton(t('session.sign_up'))
@@ -91,7 +101,7 @@ describe('Registartion of device', function () {
     describe("follow sign in", function() {
       it("should accept credentials", function(done) {
         selBrowser
-        .fill('email', 'seller@asutp.io')
+        .fill('email', 'seller.some@asutp.io')
         .fill('password', 123456)
         .pressButton(t('session.sign_in'))
         .then(function() {
@@ -122,7 +132,7 @@ describe('Registartion of device', function () {
     var seller = null;
 
     before(function(done) {
-      User.findOne({email: 'seller@asutp.io'}, function(err, u) {
+      User.findOne({email: 'seller.some@asutp.io'}, function(err, u) {
         if (err) throw "Cann't find seller";
         seller = u;
         done();
