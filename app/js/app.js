@@ -28,5 +28,6 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/rights', {templateUrl: 'partials/rights.html', controller: 'RightsCtrl'});
   $routeProvider.when('/rights/new', {templateUrl: 'partials/right.html', controller: 'NewRightCtrl'});
   $routeProvider.when('/rights/:rightId', {templateUrl: 'partials/right.html', controller: 'RightCtrl'});
+  $routeProvider.when('/organizations', {templateUrl: 'partials/organizations.html', controller: 'OrganizationsCtrl'});
   $routeProvider.otherwise({redirectTo: '/'});
 }]);

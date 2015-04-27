@@ -65,6 +65,8 @@ html(ng-app="pcs")
             ul.dropdown-menu(role="menu")
               li(pcs-operator-can="{{item.action}}", access-klass="{{klass}}", operator="operator" ng-repeat="item in createActions"): a(href="{{item.url}}")= "{{item.name}}"
         ul.nav.tp-menu-side(ng-controller="NavCtrl")
+          li(pcs-operator-can="index", access-klass="Organization", operator="operator", ng-class="{ active: isActive('#/organizations') }")
+            a(href='#/organizations')= t('organization.self.plural')
           li(pcs-operator-can="index", access-klass="Site", operator="operator", ng-class="{ active: isActive('#/sites') }")
             a(href='#/sites')= t('site.self.plural')
           li(pcs-operator-can="index", access-klass="Device", operator="operator", ng-class="{ active: isActive('#/devices') }")

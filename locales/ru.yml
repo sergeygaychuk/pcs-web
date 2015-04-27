@@ -14,6 +14,9 @@ ru:
       one: 'Не может быть меньше %{count} символа'
       few: 'Не может быть меньше %{count} символов'
       many: 'Не может быть меньше %{count} символов'
+  organization:
+    self:
+      plural: Организации
   device:
     self:
       plural: Устройства
