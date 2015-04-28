@@ -11,14 +11,14 @@ html(ng-app="pcs")
     link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.css')
     link(rel='stylesheet', href='css/app.css')
   body(ng-controller="PageCtrl")
-    nav.navbar
+    nav.navbar.navbar-default
       .container-fluid
         .navbar-header
           a.navbar-brand(href='/') asutp.io
         .collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
             li.dropdown
-              button(type='button', data-toggle='dropdown').btn.dropdown-toggle
+              a(role='button', data-toggle='dropdown', aria-expanded="false").dropdown-toggle
                 = operator.name
                 p(style="display:none", pcs-operator-id)= operator._id
                 p(style="display:none", pcs-operator-admin)= operator.admin
