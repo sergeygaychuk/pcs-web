@@ -7,6 +7,7 @@
 
 var expect = require('expect.js');
 var Browser = require('zombie');
+var User = require('../models/user');
 
 var saBrowser, orgBrowser;
 function t(key, options) {
@@ -86,6 +87,78 @@ describe('Create organization', function () {
 
       it("shouldn't see create organization btn", function() {
         expect(orgBrowser.query("li[pcs-operator-can-list]").style.display).to.be("none");
+      });
+    });
+  });
+
+  describe('superadmin want to create organization management rights', function() {
+    it("should got to rights page", function(done) {
+      saBrowser.clickLink("a[href='#/rights']", done);
+    });
+
+    describe("when want to create none default rights", function() {
+      it("should create rights for manage organization", function(done) {
+        saBrowser.clickLink("a[href='#/rights/new']", function() {
+          expect(saBrowser.location.hash).to.be('#/rights/new');
+          saBrowser
+          .fill('name', 'Manage organization')
+          .check('.rights-organization-create')
+          .check('.rights-organization-update')
+          .check('.rights-organization-show')
+          .pressButton('Создать')
+          .then(done, done)
+        });
+      });
+    });
+  });
+
+  describe('superadmin assign right to create device', function() {
+    var orgUser = null;
+
+    before(function(done) {
+      User.findOne({email: 'org.owner@asutp.io'}, function(err, u) {
+        if (err) throw "Cann't find some cool user";
+        orgUser = u;
+        done();
+      });
+    });
+
+    it("should see user", function(done) {
+      saBrowser.clickLink("a[href='#/users']", function() {
+        expect(saBrowser.url).to.eql(url + '/#/users');
+        expect(orgUser).not.to.be(null);
+        expect(saBrowser.query("table.tp-data td a[href='#/users/" + orgUser._id + "']").textContent).to.be(orgUser.name);
+        saBrowser.clickLink("table.tp-data td a[href='#/users/" + orgUser._id + "']", done);
+      });
+    });
+
+    it("want to add manage organization", function(done) {
+      saBrowser.
+        pressButton("div.row > div.tp-data > div > button.btn-success").
+        then(function() {
+          var rights = saBrowser.queryAll("div.modal div.modal-body table tr");
+          expect(saBrowser.text(saBrowser.queryAll("td", rights[0])[1])).to.eql("Manage organization");
+          saBrowser.check("div.modal div.modal-body table tr:nth-child(1) input");
+          saBrowser.
+            pressButton("div.modal div.modal-footer button.btn-primary").
+            then(function() {
+              var rights = saBrowser.queryAll("div.row div.tp-data table tr");
+              expect(rights.length).to.be(3);
+              expect(saBrowser.text("form[name='userForm'] > button")).to.eql("Изменить");
+              expect(saBrowser.query("form[name='userForm'] > button:disabled")).to.be(null);
+              saBrowser
+                .pressButton(t('action.put'))
+                .then(done, done)
+            });
+        });
+    });
+  });
+
+  describe("when user reload page", function() {
+    it("should see create menu", function() {
+      orgBrowser.visit("/", function() {
+        expect(orgBrowser.query("li[pcs-operator-can-list]").style.display).to.be("");
+        done();
       });
     });
   });

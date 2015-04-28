@@ -153,6 +153,7 @@ function knownAbilities(req, res) {
   res.json({
     "Device": ["index", "create", "update", "show", "claim"],
     "User": ["index", "create", "update", "show"],
+    "Organization": ["index", "create", "update", "show"],
   });
 }
 
