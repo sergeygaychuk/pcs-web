@@ -17,6 +17,7 @@ function indexOrganizations(req, res) {
   page--;
   if (page < 0)
     page = 0;
+  //TODO: should be filtered by memebers
   Organization.count(function (err, count) {
     if (err)
       return res.send(500, err.toString());
@@ -38,7 +39,7 @@ function indexOrganizations(req, res) {
 }
 
 module.exports.index = [ auth.authenticate,
-                         auth.requireSuperadmin,
+                         auth.canAccessFor.bind(this, "Organization", "index"),
                          indexOrganizations];
 
 // vim:ts=2 sts=2 sw=2 et:
