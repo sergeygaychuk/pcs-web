@@ -23,6 +23,36 @@ angular.module('pcs.directives', []).
       scope.operator._id = elm.text();
     };
   }]).
+  directive('pcsOperatorCanList', [function() {
+    function link(scope, elm, attrs) {
+      function listCheck() {
+        var elms = elm.find("[pcs-operator-can]"),
+            showed = false;
+        showed = $.makeArray(elms).some(function(elem) {
+          var action = $(elem).attr("pcs-operator-can"),
+              cls = $(elem).attr('access-klass');
+          if (scope.operator.can(action, cls)) {
+            elm.show();
+            return true;
+          }
+          return false;
+        });
+        if (!showed) {
+          elm.hide();
+        }
+      }
+      listCheck();
+      scope.$watchCollection("operator.rights", function() {
+        listCheck();
+      });
+    };
+    return {
+      link: link,
+      scope: {
+        operator: "="
+      }
+    };
+  }]).
   directive('pcsOperatorCan', [function() {
     function link(scope, elm, attrs) {
       if (scope.operator.can(attrs.pcsOperatorCan, attrs.accessKlass)) {

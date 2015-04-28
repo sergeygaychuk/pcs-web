@@ -17,12 +17,12 @@ html(ng-app="pcs")
           a.navbar-brand(href='/') asutp.io
         .collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
-            li.dropdown
+            li.dropdown(pcs-operator-can-list, operator='operator')
               a(role='button', data-toggle='dropdown', aria-expanded="false").dropdown-toggle
                 = t('action.create')
                 span.caret
               ul.dropdown-menu
-                li
+                li(pcs-operator-can="create", access-klass="Organization", operator="operator")
                   a(href='#/organizations/new')= t('organization.create')
             li.dropdown
               a(role='button', data-toggle='dropdown', aria-expanded="false").dropdown-toggle

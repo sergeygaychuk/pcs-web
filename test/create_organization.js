@@ -84,11 +84,9 @@ describe('Create organization', function () {
         .then(done, done);
       });
 
-      it("shouldn't see organization pages", function() {
-        expect(orgBrowser.query("a[href='#/organizations']").parentNode.style.display).to.be("none");
+      it("shouldn't see create organization btn", function() {
+        expect(orgBrowser.query("li[pcs-operator-can-list]").style.display).to.be("none");
       });
-
-      it("shouldn't see create organization btn");
     });
   });
 });
