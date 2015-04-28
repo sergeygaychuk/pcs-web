@@ -85,8 +85,8 @@ describe('Create organization', function () {
         .then(done, done);
       });
 
-      it("shouldn't see create organization btn", function() {
-        expect(orgBrowser.query("li[pcs-operator-can-list]").style.display).to.be("none");
+      it("shouldn't see organizations list", function() {
+        expect(orgBrowser.query("a[href='#/organizations']").parentNode.style.display).to.be("none");
       });
     });
   });
@@ -105,6 +105,7 @@ describe('Create organization', function () {
           .check('.rights-organization-create')
           .check('.rights-organization-update')
           .check('.rights-organization-show')
+          .check('.rights-organization-index')
           .pressButton('Создать')
           .then(done, done)
         });
@@ -155,9 +156,17 @@ describe('Create organization', function () {
   });
 
   describe("when user reload page", function() {
-    it("should see create menu", function() {
+    it("should see organizations list", function(done) {
       orgBrowser.visit("/", function() {
-        expect(orgBrowser.query("li[pcs-operator-can-list]").style.display).to.be("");
+        expect(orgBrowser.query("a[href='#/organizations']").parentNode.style.display).to.be("");
+        done();
+      });
+    });
+
+    it("should not see any organizations", function(done) {
+      orgBrowser.clickLink("a[href='#/organizations']", function() {
+        expect(orgBrowser.url).to.eql(url + '/#/organizations');
+        expect(orgBrowser.queryAll('table tr').length).to.eql(0);
         done();
       });
     });
