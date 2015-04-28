@@ -19,6 +19,13 @@ html(ng-app="pcs")
           ul.nav.navbar-nav.navbar-right
             li.dropdown
               a(role='button', data-toggle='dropdown', aria-expanded="false").dropdown-toggle
+                = t('action.create')
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href='#/organizations/new')= t('organization.create')
+            li.dropdown
+              a(role='button', data-toggle='dropdown', aria-expanded="false").dropdown-toggle
                 = operator.name
                 p(style="display:none", pcs-operator-id)= operator._id
                 p(style="display:none", pcs-operator-admin)= operator.admin

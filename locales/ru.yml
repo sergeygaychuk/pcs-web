@@ -17,6 +17,7 @@ ru:
   organization:
     self:
       plural: Организации
+    create: Создать организацию
   device:
     self:
       plural: Устройства
@@ -67,6 +68,7 @@ ru:
   action:
     put: Изменить
     undefined: Действия
+    create: Создать
   session:
     prompt: Для работы в системе необходима регистрация
     sign_in: Вход
