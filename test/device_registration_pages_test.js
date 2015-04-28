@@ -154,7 +154,6 @@ describe('Registartion of device', function () {
         then(function() {
           expect(saBrowser.text("div.modal h3.modal-title")).to.eql("Выбор правил");
           var rights = saBrowser.queryAll("div.modal div.modal-body table tr");
-          expect(rights.length).to.eql(1);
           expect(saBrowser.text(saBrowser.queryAll("td", rights[0])[1])).to.eql("Manage devices");
           saBrowser.check("div.modal div.modal-body table tr:nth-child(1) input");
           expect(saBrowser.text("div.modal div.modal-footer button.btn-primary")).to.eql("Применить");

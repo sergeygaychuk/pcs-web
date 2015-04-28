@@ -37,7 +37,7 @@ describe('User', function(){
         .fill(t('user.password'), user.password)
         .pressButton(t('session.sign_in'))
         .then(function () {
-          browser.pressButton('nav button.dropdown-toggle').then(function () {
+          browser.clickLink('nav li.dropdown a.dropdown-toggle').then(function () {
             browser.clickLink('nav ul.dropdown-menu a').then(done, done);
           }, done);
         }, done);
