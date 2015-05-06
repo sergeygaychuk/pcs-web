@@ -61,7 +61,40 @@ describe('Create organization', function () {
         orgBrowser.clickLink("a[href='#/organizations']", function() {
           expect(orgBrowser.url).to.eql(url + '/#/organizations');
           expect(orgBrowser.queryAll("table.tr").length).to.be(0);
+          expect(orgBrowser.text("a[href='#/organizations/new']")).not.to.be(null);
           done();
+        });
+      });
+
+      describe("when user want to create organization", function() {
+        it("should see create page", function(done) {
+          orgBrowser.clickLink("a[href='#/organizations/new']", function() {
+            expect(orgBrowser.query("input[name='name']").value).to.eql("");
+            expect(orgBrowser.query("input[name='owner']").value).to.eql("Some Cool User");
+            expect(orgBrowser.text("form[name='orgForm'] > button")).to.eql("Создать");
+            expect(orgBrowser.query("form[name='orgForm'] > button:disabled")).not.to.be(null);
+            orgBrowser
+              .fill('input[name="name"]', "Some cool organization")
+              .pressButton(t('action.undefined'))
+              .then(done, done)
+          });
+        });
+
+        it("should see new organization in list", function() {
+          expect(orgBrowser.url).to.be(url + '/#/organizations');
+          var pager = orgBrowser.queryAll("div.page > b");
+          expect(pager.length).to.be(3);
+          expect(pager[0].textContent).to.be("1");
+          expect(pager[1].textContent).to.be("1");
+
+          var table = orgBrowser.queryAll('table.tp-data tr');
+          expect(table.length).to.be(1);
+
+          var row = orgBrowser.queryAll("td", table[1]);
+          expect(orgBrowser.text(row[1])).to.be("Some cool organization");
+          expect(orgBrowser.text("span", row[2])).to.be("Some Cool User");
+          expect(orgBrowser.queryAll("span", row[3]).length).to.be(1);
+          expect(orgBrowser.text("span", row[3])).to.be("Владелец");
         });
       });
     });

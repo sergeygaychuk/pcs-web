@@ -13,7 +13,7 @@ angular.module('pcs.controllers', [])
       return viewLocation === '#' + $location.path();
     }
   }])
-  .controller('PageCtrl', ['$scope', '$location', 'User', function($scope, $location, User) {
+  .controller('PageCtrl', ['$scope', '$location', function($scope, $location) {
     $scope.pager = {
       first: 0,
       last: 0,
@@ -23,15 +23,9 @@ angular.module('pcs.controllers', [])
     }
     $scope.moment = moment;
     $scope.operator = {}
-    $scope.$watch("operator._id", function() {
-      if ($scope.operator._id) {
-        User.get({userId: $scope.operator._id}, function(user) {
-          angular.extend($scope.operator, user);
-        });
-      }
-    });
-    $scope.setNewURL = function (url) {
+    $scope.setNewURL = function (url, showAnyway) {
       $scope.newURL = url;
+      $scope.showAnyway = showAnyway;
     }
     $scope.page = function (page, perPage, count) {
       $scope.pager.count = count;
@@ -252,18 +246,28 @@ angular.module('pcs.controllers', [])
   .controller('OrganizationsCtrl', ['$scope', 'Organization', '$location',
       function($scope, Organization, $location) {
         var page = Number($location.search().page) || 1;
-        $scope.setNewURL('#/organizations/new');
+        $scope.setNewURL('#/organizations/new', true);
         $scope.organizations = Organization.query({page: page}, function () {
           var len = $scope.organizations.length - 1;
           var count = $scope.organizations.splice(len)[0].count;
           $scope.page(page, 25, count);
         });
   }])
-  .controller('NewOrganizationCtrl', ['$scope', '$location', 'Organization',
-      function($scope, $location, Organization) {
+  .controller('NewOrganizationCtrl', ['$scope', '$location', 'Organization', 'User',
+      function($scope, $location, Organization, User) {
         $scope.page(1, 1, 0);
         $scope.setNewURL(null);
         $scope.organization = new Organization();
+        $scope.$watch("operator._id", function() {
+          if ($scope.operator._id) {
+            User.get({userId: $scope.operator._id}).$promise.then(function(user) {
+              angular.extend($scope.operator, user);
+            }, function () {
+              //
+              console.log(arguments);
+            });
+          }
+        });
         $scope.save = function () {
           $scope.organization.$save({}, function () {
             $scope.orgForm.$setPristine();
@@ -272,6 +276,6 @@ angular.module('pcs.controllers', [])
             console.log(res);
           });
         }
-  }]);
+      }]);
 
 // vim:ts=2 sts=2 sw=2 et:
