@@ -119,6 +119,7 @@ app.post('/users/:user', users.update);
 app.post('/users', users.create);
 
 app.get('/organizations', orgs.index);
+app.post('/organizations', orgs.create);
 
 app.param('device', devices.load);
 app.get('/devices', devices.index);
