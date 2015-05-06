@@ -13,7 +13,7 @@ angular.module('pcs.controllers', [])
       return viewLocation === '#' + $location.path();
     }
   }])
-  .controller('PageCtrl', ['$scope', '$location', function($scope, $location) {
+  .controller('PageCtrl', ['$scope', '$location', 'User', function($scope, $location, User) {
     $scope.pager = {
       first: 0,
       last: 0,
@@ -23,6 +23,13 @@ angular.module('pcs.controllers', [])
     }
     $scope.moment = moment;
     $scope.operator = {}
+    $scope.$watch("operator._id", function() {
+      if ($scope.operator._id) {
+        User.get({userId: $scope.operator._id}, function(user) {
+          angular.extend($scope.operator, user);
+        });
+      }
+    });
     $scope.setNewURL = function (url) {
       $scope.newURL = url;
     }
@@ -245,12 +252,26 @@ angular.module('pcs.controllers', [])
   .controller('OrganizationsCtrl', ['$scope', 'Organization', '$location',
       function($scope, Organization, $location) {
         var page = Number($location.search().page) || 1;
-        $scope.setNewURL(null);
+        $scope.setNewURL('#/organizations/new');
         $scope.organizations = Organization.query({page: page}, function () {
           var len = $scope.organizations.length - 1;
           var count = $scope.organizations.splice(len)[0].count;
           $scope.page(page, 25, count);
         });
+  }])
+  .controller('NewOrganizationCtrl', ['$scope', '$location', 'Organization',
+      function($scope, $location, Organization) {
+        $scope.page(1, 1, 0);
+        $scope.setNewURL(null);
+        $scope.organization = new Organization();
+        $scope.save = function () {
+          $scope.organization.$save({}, function () {
+            $scope.orgForm.$setPristine();
+            $location.path('/organizations').replace();
+          }, function (res) {
+            console.log(res);
+          });
+        }
   }]);
 
 // vim:ts=2 sts=2 sw=2 et:
