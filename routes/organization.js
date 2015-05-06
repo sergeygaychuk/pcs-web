@@ -44,7 +44,26 @@ function indexOrganizations(req, res) {
     });
   }
 
+var orgFields = ['name']
+
+function createOrganization(req, res) {
+  req.organization = new Organization();
+  orgFields.forEach(function (f) {
+    req.organization[f] = req.body[f];
+  });
+  req.organization.owner = req.operator._id;
+  req.organization.save(function (err) {
+    if (err) {
+      return res.json(500, err);
+    }
+    res.json(req.organization);
+  });
+}
+
 module.exports.index = [ auth.authenticate,
                          indexOrganizations];
+
+module.exports.create = [ auth.authenticate,
+                          createOrganization];
 
 // vim:ts=2 sts=2 sw=2 et:
