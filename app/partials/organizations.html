@@ -7,6 +7,16 @@
     </colgroup>
     <tbody>
     <tr ng-repeat="org in organizations">
+      <td class="tp-check">
+        <div class="tp-check"></div>
+      </td>
+      <td class="tp-sender">{{org.name}}</td>
+      <td>
+        <span>{{org.owner.name}}</span>
+      </td>
+      <td>
+        <span ng-if="org.owner._id == operator._id" class="label label-danger">Владелец</span>
+      </td>
     </tr>
     </tbody>
   </table>
