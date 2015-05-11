@@ -13,6 +13,10 @@ input[type="checkbox"].form-control {
   width: auto;
 }
 
+a.dropdown-toggle {
+  cursor: pointer;
+}
+
 @media (min-width: 1600px) {
 .col-xl-1 {
   width: 6.25%;
@@ -85,25 +89,6 @@ body.user {
   height: 100%;
 }
 
-header {
-  height: 50px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-header.navbar {
-  padding: 0px 15px;
-  background: #f1f1f1;
-  border: 0px solid #e5e5e5;
-  border-radius: 0px;
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 9px;
-}
-
-header .nav {
-  font-size: 13px;
-}
-
 #user .dropdown-menu {
   min-width: 210px;
   right: 15px;
@@ -127,7 +112,9 @@ header .nav {
   float: none;
 }
 
-.navbar-brand, .navbar-brand:hover, .navbar-brand:focus {
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
   font: 36px/48px Times New Roman,serif;
   font-weight: bold;
   color: #008000;
