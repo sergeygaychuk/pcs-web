@@ -17,6 +17,12 @@ a.dropdown-toggle {
   cursor: pointer;
 }
 
+.profile-header {
+  margin-left: 15px;
+  margin-right: 15px;
+  border-bottom: 2px solid black;
+}
+
 @media (min-width: 1600px) {
 .col-xl-1 {
   width: 6.25%;

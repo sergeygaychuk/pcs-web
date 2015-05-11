@@ -13,6 +13,7 @@ var User = require('../../models/user');
 var Device = require('../../models/device');
 var Site = require('../../models/site');
 var System = require('../../models/system');
+var Organization = require('../../models/organization');
 
 var async = require('async');
 var FactoryLady = require('factory-lady');
@@ -33,6 +34,7 @@ User.find().remove(function() {});
 Device.find().remove(function() {});
 Site.find().remove(function() {});
 System.find().remove(function() {});
+Organization.find().remove(function() {});
 
 FactoryLady.define('user', User, {
   password: 'password',
@@ -47,6 +49,13 @@ FactoryLady.define('admin', User, {
   admin: true,
   name: function (cb) { cb(faker.name.findName()) },
   email: function (cb) { cb('admin-' + ++userCounter + '@example.com') }
+})
+
+var organizationCounter = 0;
+
+FactoryLady.define('organization', Organization, {
+  name: function (cb) { cb(faker.lorem.words(1) + ++organizationCounter) },
+  owner: FactoryLady.assoc('user', '_id')
 })
 
 var deviceCounter = 0;
