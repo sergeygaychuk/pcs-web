@@ -60,10 +60,36 @@ function createOrganization(req, res) {
   });
 }
 
+function loadOrganization(req, res, next, id) {
+  Organization.findOne({ _id: id }, function (err, org) {
+    if (err) {
+      return res.send(404);
+    }
+    req.organization = org;
+    next();
+  })
+}
+
+function showOrganization(req, res) {
+  if (!req.organization)
+    return res.send(404);
+  var organization = {};
+  orgExportFields.split(' ').forEach(function (f) {
+    organization[f] = req.organization[f];
+  });
+  res.json_ng(organization);
+}
+
 module.exports.index = [ auth.authenticate,
                          indexOrganizations];
 
 module.exports.create = [ auth.authenticate,
                           createOrganization];
+
+module.exports.load = loadOrganization;
+
+module.exports.show = [ auth.authenticate,
+                        showOrganization];
+
 
 // vim:ts=2 sts=2 sw=2 et:

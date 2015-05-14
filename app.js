@@ -118,7 +118,9 @@ app.get('/users/:user', users.show);
 app.post('/users/:user', users.update);
 app.post('/users', users.create);
 
+app.param('organization', orgs.load);
 app.get('/organizations', orgs.index);
+app.get('/organizations/:organization', orgs.show);
 app.post('/organizations', orgs.create);
 
 app.param('device', devices.load);
