@@ -116,6 +116,44 @@ describe('For manage owned organization', function () {
     });
   });
 
+  describe("when user want to create organization", function() {
+    it("he should stay on profile page", function() {
+      expect(browser.location.hash).to.eql('#/users/' + user._id + '?page=2');
+    });
+
+    it("he should see create btn", function() {
+      expect(browser.text("button.orgs-create-btn")).to.eql('Создать организацию');
+
+    });
+
+    describe("and press create btn", function() {
+      before(function(done) {
+        browser.pressButton("button.orgs-create-btn", done);
+      });
+
+      it("he should see creation page", function() {
+        expect(browser.location.hash).to.eql('#/users/' + user._id + '/organizations/new');
+        expect(browser.query("input[name='name']").value).to.eql('');
+        expect(browser.query("input[name='owner']").value).to.eql(user.name);
+        expect(browser.query("input[name='owner']:disabled")).not.to.be(null);
+        expect(browser.text("form[name='organizationForm'] > button")).to.eql("Создать");
+        expect(browser.query("form[name='organizationForm'] > button:disabled")).not.to.be(null);
+      });
+
+      it("he should be available to create organization", function(done) {
+        browser
+          .fill("input[name='name']", "arganizacija")
+          .pressButton("form[name='organizationForm'] > button")
+          .then(done, done);
+      });
+
+      it("he should return to profile page and see organization", function() {
+        expect(browser.location.hash).to.eql('#/users/' + user._id);
+        expect(browser.text("table tr > td")).to.contain("arganizacija");
+      });
+    });
+  });
+
 
   describe("user", function() {
     it("should signout afterward", function() {

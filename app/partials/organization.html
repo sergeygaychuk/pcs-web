@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-lg-6">
+    <form name="organizationForm" accept-charset="UTF-8" class="form-horizontal">
+      <div class="form-group">
+        <label for="name" class="control-label col-sm-3">Название организации</label>
+        <div class="col-sm-9">
+          <input name="name" type="text" ng-model="organization.name" placeholder="Название организации" class="form-control input-sm">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="owner" class="control-label col-sm-3">Создатель</label>
+        <div class="col-sm-9">
+          <input name="owner" type="text" ng-model="user.name" placeholder="Создатель" class="form-control input-sm" disabled>
+        </div>
+      </div>
+      <button name="submit" class="btn btn-sm btn-primary" ng-disabled="organizationForm.$pristine" ng-click="save()">Создать</button>
+    </form>
+  </div>
+</div>

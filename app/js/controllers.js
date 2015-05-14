@@ -218,8 +218,8 @@ angular.module('pcs.controllers', [])
           });
         }
   }])
-  .controller('UserCtrl', ['$scope', '$routeParams', 'User', 'Organization', '$location',
-    function($scope, $routeParams, User, Organization, $location) {
+  .controller('UserCtrl', ['$scope', '$routeParams', 'User',
+    function($scope, $routeParams, User) {
       $scope.page(1, 1, 0);
       $scope.setNewURL('#/users/new');
       $scope.user = User.get({ userId: $routeParams.userId });
@@ -241,40 +241,59 @@ angular.module('pcs.controllers', [])
           $scope.page(page, 25, count);
         });
     }])
+    .controller('NewOrganizationCtrl', ['$scope', 'Organization', 'User', '$routeParams', '$location',
+      function($scope, Organization, User, $routeParams, $location) {
+        $scope.page(1, 1, 0);
+        $scope.setNewURL(null);
+        $scope.organization = new Organization();
+        $scope.user = User.get({userId: $routeParams.userId});
+        $scope.save = function () {
+          $scope.organization.$save({}, function () {
+            $scope.organizationForm.$setPristine();
+            $location.path('/users/' + $routeParams.userId).replace();
+          }, function (res) {
+            console.log(res);
+          });
+        };
+    }])
     .controller('OrganizationsCtrl', ['$scope', '$location', 'Organization', '$routeParams',
       function($scope, $location, Organization, $routeParams) {
+        var page = Number($location.search().page) || 1;
+        $scope.orgPager = {
+          first: 0,
+          last: 0,
+          count: 0,
+          page: 1,
+          show: false
+        };
+        $scope.orgPage = function (page, perPage, count) {
+          $scope.orgPager.count = count;
+          if (count) {
+            $scope.orgPager.show = true;
+          } else {
+            $scope.orgPager.show = false;
+          }
+          $scope.orgPager.page = page;
+          $scope.orgPager.first = (page - 1) * perPage + 1;
+          $scope.orgPager.last = page * perPage;
+          if (page > 1) {
+            $scope.orgPager.prev = '#' + $location.path() + '?page=' + (page - 1);
+          } else {
+            $scope.orgPager.prev = '';
+          }
+          if ($scope.orgPager.last >= $scope.orgPager.count) {
+            $scope.orgPager.last = $scope.orgPager.count;
+            $scope.orgPager.next = '';
+          } else {
+            $scope.orgPager.next = '#' + $location.path() + '?page=' + (page + 1);
+          }
+        };
+        $scope.createOrganization = function() {
+          $location.search({});
+          $location.path('/users/' + $routeParams.userId + '/organizations/new');
+        };
         $scope.$watch("operator._id", function(id) {
           if (id && id.toString() == $routeParams.userId) {
-            var page = Number($location.search().page) || 1;
-            $scope.orgPager = {
-              first: 0,
-              last: 0,
-              count: 0,
-              page: 1,
-              show: false
-            }
-            $scope.orgPage = function (page, perPage, count) {
-              $scope.orgPager.count = count;
-              if (count) {
-                $scope.orgPager.show = true;
-              } else {
-                $scope.orgPager.show = false;
-              }
-              $scope.orgPager.page = page;
-              $scope.orgPager.first = (page - 1) * perPage + 1;
-              $scope.orgPager.last = page * perPage;
-              if (page > 1) {
-                $scope.orgPager.prev = '#' + $location.path() + '?page=' + (page - 1);
-              } else {
-                $scope.orgPager.prev = '';
-              }
-              if ($scope.orgPager.last >= $scope.orgPager.count) {
-                $scope.orgPager.last = $scope.orgPager.count;
-                $scope.orgPager.next = '';
-              } else {
-                $scope.orgPager.next = '#' + $location.path() + '?page=' + (page + 1);
-              }
-            }
             $scope.organizations = Organization.query({page: page}, function () {
               var len = $scope.organizations.length - 1;
               var count = $scope.organizations.splice(len)[0].count;
