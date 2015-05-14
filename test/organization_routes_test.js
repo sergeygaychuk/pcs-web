@@ -44,6 +44,17 @@ describe('Organization routes', function() {
       router(Routes.show, req, res);
     });
   });
+
+  describe("#update", function() {
+    it("should deny access to non-signed-in users", function(done) {
+      var req = { session: {} },
+      res = { redirect: function(url) {
+        expect(url).to.eql("/signin");
+        done();
+      }};
+      router(Routes.update, req, res);
+    });
+  });
 });
 
 // vim:ts=2 sts=2 sw=2 et:

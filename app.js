@@ -122,6 +122,7 @@ app.param('organization', orgs.load);
 app.get('/organizations', orgs.index);
 app.get('/organizations/:organization', orgs.show);
 app.post('/organizations', orgs.create);
+app.post('/organizations/:organization', orgs.update);
 
 app.param('device', devices.load);
 app.get('/devices', devices.index);

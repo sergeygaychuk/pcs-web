@@ -80,6 +80,24 @@ function showOrganization(req, res) {
   res.json_ng(organization);
 }
 
+function updateOrganization(req, res) {
+  if (!req.organization)
+    return res.send(404);
+  orgFields.forEach(function (f) {
+    req.organization[f] = req.body[f];
+  });
+  req.organization.save(function (err) {
+    if (err) {
+      return res.json(500, err);
+    }
+    var organization = {};
+    orgExportFields.split(' ').forEach(function (f) {
+      organization[f] = req.organization[f];
+    });
+    res.json_ng(organization);
+  });
+}
+
 module.exports.index = [ auth.authenticate,
                          indexOrganizations];
 
@@ -90,6 +108,9 @@ module.exports.load = loadOrganization;
 
 module.exports.show = [ auth.authenticate,
                         showOrganization];
+
+module.exports.update = [ auth.authenticate,
+                          updateOrganization];
 
 
 // vim:ts=2 sts=2 sw=2 et:
