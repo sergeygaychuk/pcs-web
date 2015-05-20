@@ -250,7 +250,23 @@ angular.module('pcs.controllers', [])
         $scope.save = function () {
           $scope.organization.$save({}, function () {
             $scope.organizationForm.$setPristine();
-            $location.path('/users/' + $routeParams.userId).replace();
+            $location.path('/users/' + $routeParams.userId + '/organizations/' + $scope.organization._id).replace();
+          }, function (res) {
+            console.log(res);
+          });
+        };
+    }])
+    .controller('OrganizationCtrl', ['$scope', 'Organization', 'User', '$routeParams', '$location',
+      function($scope, Organization, User, $routeParams, $location) {
+        $scope.page(1, 1, 0);
+        $scope.setNewURL(null);
+        $scope.organization = Organization.get({orgId: $routeParams.orgId});
+        $scope.organization.$promise.then(function() {
+          $scope.user = User.get({userId: $scope.organization.owner});
+        });
+        $scope.save = function () {
+          $scope.organization.$save({}, function () {
+            $scope.organizationForm.$setPristine();
           }, function (res) {
             console.log(res);
           });

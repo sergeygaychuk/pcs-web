@@ -67,7 +67,7 @@
             <div class="tp-check"></div>
           </td>
           <td class="tp-sender">
-            {{organization.name}}
+            <a ng-href="#/users/{{organization.owner._id}}/organizations/{{organization._id}}">{{organization.name}}</a>
           </td>
           <td>
             <span>{{organization.owner.name}}</span>

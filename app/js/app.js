@@ -22,5 +22,6 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/users/:userId', {templateUrl: 'partials/user.html', controller: 'UserCtrl'});
   $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersCtrl'});
   $routeProvider.when('/users/:userId/organizations/new', {templateUrl: 'partials/organization.html', controller: 'NewOrganizationCtrl'});
+  $routeProvider.when('/users/:userId/organizations/:orgId', {templateUrl: 'partials/organization.html', controller: 'OrganizationCtrl'});
   $routeProvider.otherwise({redirectTo: '/sites'});
 }]);

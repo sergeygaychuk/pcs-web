@@ -147,10 +147,70 @@ describe('For manage owned organization', function () {
           .then(done, done);
       });
 
-      it("he should return to profile page and see organization", function() {
-        expect(browser.location.hash).to.eql('#/users/' + user._id);
-        expect(browser.text("table tr > td")).to.contain("arganizacija");
+      it("he should return to edit page", function(done) {
+        Organization.find({owner: user._id, name: 'arganizacija'}).exec(function (err, orgs) {
+          expect(err).to.be(null);
+          expect(orgs.length).to.eql(1);
+          expect(browser.location.hash).to.eql('#/users/' + user._id + '/organizations/' + orgs[0]._id);
+          expect(browser.query("input[name='name']").value).to.eql('arganizacija');
+          expect(browser.query("input[name='owner']").value).to.eql(user.name);
+          done();
+        });
       });
+    });
+  });
+
+  describe("when user want to edit organizations", function() {
+    var organization = null;
+    var orgUrl = null;
+
+    before(function(done) {
+      Organization.find({owner: user._id, name: 'arganizacija'}).exec(function (err, orgs) {
+        if (err) throw err;
+        if (orgs.length !== 1) throw "Invalid";
+        organization = orgs[0];
+        orgUrl = "#/users/" + user._id + "/organizations/" + organization._id;
+        done();
+      });
+    });
+
+    it("he should go to user profile page", function(done) {
+      browser.clickLink('nav a.dropdown-toggle').then(function () {
+        browser.clickLink('nav ul.dropdown-menu a').then(done, done);
+      }, done);
+    });
+
+    it("he should see organization in list", function() {
+      expect(browser.text('table.tp-data tr td a[href="' + orgUrl +'"]')).to.eql(organization.name);
+    });
+
+    it("he should go to edit page", function(done) {
+      browser.clickLink('table.tp-data tr td a[href="' + orgUrl +'"]').then(function() {
+        expect(browser.location.hash).to.eql(orgUrl);
+        expect(browser.query("input[name='name']").value).to.eql('arganizacija');
+        expect(browser.query("input[name='owner']").value).to.eql(user.name);
+        expect(browser.query("input[name='owner']:disabled")).not.to.be(null);
+        expect(browser.text("form[name='organizationForm'] > button")).to.eql("Изменить");
+        expect(browser.query("form[name='organizationForm'] > button:disabled")).not.to.be(null);
+        done();
+      }, done);
+    });
+
+    it("he should update organization name", function(done) {
+      browser
+        .fill("input[name='name']", "arganizacija222")
+        .pressButton("form[name='organizationForm'] > button")
+        .then(done, done);
+    });
+
+    it("he should go to user profile page", function(done) {
+      browser.clickLink('nav a.dropdown-toggle').then(function () {
+        browser.clickLink('nav ul.dropdown-menu a').then(done, done);
+      }, done);
+    });
+
+    it("he should see changed name in list", function() {
+      expect(browser.text('table.tp-data tr td a[href="' + orgUrl +'"]')).to.eql('arganizacija222');
     });
   });
 
