@@ -98,6 +98,14 @@ function updateOrganization(req, res) {
   });
 }
 
+function destroyOrganization(req, res) {
+  if (!req.organization)
+    return res.send(404);
+  req.organization.remove(function() {
+    res.send(200);
+  });
+}
+
 module.exports.index = [ auth.authenticate,
                          indexOrganizations];
 
@@ -112,5 +120,7 @@ module.exports.show = [ auth.authenticate,
 module.exports.update = [ auth.authenticate,
                           updateOrganization];
 
+module.exports.destroy = [ auth.authenticate,
+                           destroyOrganization ];
 
 // vim:ts=2 sts=2 sw=2 et:
