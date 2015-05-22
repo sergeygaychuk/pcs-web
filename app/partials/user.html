@@ -37,48 +37,4 @@
     </form>
   </div>
 </div>
-<div class="row" ng-if='operator._id == user._id' ng-controller='OrganizationsCtrl'>
-  <h3 class="profile-header">Организации</h3>
-  <div class="col-lg-9">
-    <button class="btn btn-sm btn-success orgs-create-btn" ng-click="createOrganization()">Создать организацию</button>
-    <button class="btn btn-sm btn-danger orgs-remove-btn" ng-click="destroyOrganization()" ng-disabled='selected.length === 0'>Удалить организации</button>
-  </div>
-  <div class="col-lg-3">
-    <div class="pull-right">
-      <div class="page orgs-pager">
-        <b>{{orgPager.first}}</b>-<b>{{orgPager.last}}</b>&nbsp;из&nbsp;<b>{{orgPager.count}}</b>
-        <ul class='pagination'>
-          <li><a ng-href="{{orgPager.prev}}">&lt;</a></li>
-          <li><a ng-href="{{orgPager.next}}">&gt;</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-12">
-    <table class="tp-data">
-      <colgroup>
-        <col class="tp-check">
-        <col class="col-xs-6 col-sm-4 col-xl-3">
-        <col class="col-xs-4 col-sm-3 col-xl-2">
-        <col class="tp-text">
-      </colgroup>
-      <tbody>
-        <tr ng-repeat="organization in organizations">
-          <td class="tp-check">
-            <div><input type="checkbox" checklist-model="selected" checklist-value="organization"></div>
-          </td>
-          <td class="tp-sender">
-            <a ng-href="#/users/{{organization.owner._id}}/organizations/{{organization._id}}">{{organization.name}}</a>
-          </td>
-          <td>
-            <span>{{organization.owner.name}}</span>
-          </td>
-          <td>
-            <span ng-if="organization.owner._id == user._id" class="label label-danger">Администратор</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="clearfix"></div>
-  </div>
-</div>
+<ng-include src="'partials/organizations.html'" ng-if='operator._id == user._id' ng-controller='OrganizationsCtrl'></ng-include>
