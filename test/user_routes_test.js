@@ -9,6 +9,7 @@
 var expect = require('expect.js');
 
 var User = require('../models/user');
+var Organization = require('../models/organization');
 var Routes = require('../routes/user');
 var router = require('./support/router');
 
@@ -544,6 +545,26 @@ describe('User routes', function() {
             expect(z).to.be.ok;
             expect(z.name).to.be(req.body.name);
             expect(z.email).to.be(req.body.email);
+            done();
+          });
+        };
+        router(Routes.create, req, res);
+      });
+
+      it("should create organization with name as user email", function(done) {
+        req.body = {
+          name: 'created user 2',
+          email: 'created.user2@example.com',
+          password: '12345678',
+          confirmation: '12345678',
+        };
+        res.json = function(u) {
+          expect(u._id).not.to.be.an('undefined');
+          Organization.findOne({ owner: u._id, name: u.email }, function (err, z) {
+            expect(err).not.to.be.ok;
+            expect(z).to.be.ok;
+            expect(z.name).to.be(req.body.email);
+            expect(z.owner.toString()).to.be(u._id.toString());
             done();
           });
         };

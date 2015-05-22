@@ -6,6 +6,7 @@
  */
 
 var User = require('../models/user');
+var Organization = require('../models/organization');
 var auth = require('./_auth');
 var per_page = 25;
 
@@ -123,7 +124,17 @@ function createUser(req, res) {
         if (err) {
           return res.json(500, err);
         }
-        res.json(req.user);
+        var org = new Organization();
+        org.owner = req.user._id;
+        org.name = req.user.email;
+        org.save(function(err) {
+          if (err) {
+            //FIXME: remove user should be done in transaction
+            req.user.remove();
+            return res.json(500, "Internal server error");
+          }
+          res.json(req.user);
+        });
       });
     })
   });
