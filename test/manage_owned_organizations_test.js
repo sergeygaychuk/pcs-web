@@ -123,7 +123,6 @@ describe('For manage owned organization', function () {
 
     it("he should see create btn", function() {
       expect(browser.text("button.orgs-create-btn")).to.eql('Создать организацию');
-
     });
 
     describe("and press create btn", function() {
@@ -214,6 +213,36 @@ describe('For manage owned organization', function () {
     });
   });
 
+  describe("when user want to remove organizations", function() {
+    it("he should go to user profile page", function(done) {
+      browser.clickLink('nav a.dropdown-toggle').then(function () {
+        browser.clickLink('nav ul.dropdown-menu a').then(done, done);
+      }, done);
+    });
+
+    it("he should see remove btn", function() {
+      expect(browser.text("button.orgs-remove-btn")).to.eql('Удалить организации');
+      expect(browser.query("button.orgs-remove-btn:disabled")).not.to.be(null);
+    });
+
+    it("he should has possibility to select organizations", function() {
+      browser.check("table tr:nth-child(1) td input[type='checkbox']");
+      expect(browser.query("button.orgs-remove-btn:disabled")).to.be(null);
+      browser.check("table tr:nth-child(2) td input[type='checkbox']");
+    });
+
+    it("he should remove organizations and see updated data", function(done) {
+      browser.pressButton("button.orgs-remove-btn").then(function() {
+        expect(browser.queryAll("table tr").length).to.eql(25);
+        var pager = browser.queryAll("div.page.orgs-pager > b");
+        expect(pager.length).to.be(3);
+        expect(pager[0].textContent).to.be("1");
+        expect(pager[1].textContent).to.be("25");
+        expect(pager[2].textContent).to.be("29");
+        done();
+      }, done);
+    });
+  });
 
   describe("user", function() {
     it("should signout afterward", function() {

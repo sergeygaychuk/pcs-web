@@ -40,7 +40,8 @@
 <div class="row" ng-if='operator._id == user._id' ng-controller='OrganizationsCtrl'>
   <h3 class="profile-header">Организации</h3>
   <div class="col-lg-9">
-    <button class="btn btn-sm btn-danger orgs-create-btn" ng-click="createOrganization()">Создать организацию</button>
+    <button class="btn btn-sm btn-success orgs-create-btn" ng-click="createOrganization()">Создать организацию</button>
+    <button class="btn btn-sm btn-danger orgs-remove-btn" ng-click="destroyOrganization()" ng-disabled='selected.length === 0'>Удалить организации</button>
   </div>
   <div class="col-lg-3">
     <div class="pull-right">
@@ -64,7 +65,7 @@
       <tbody>
         <tr ng-repeat="organization in organizations">
           <td class="tp-check">
-            <div class="tp-check"></div>
+            <div><input type="checkbox" checklist-model="selected" checklist-value="organization"></div>
           </td>
           <td class="tp-sender">
             <a ng-href="#/users/{{organization.owner._id}}/organizations/{{organization._id}}">{{organization.name}}</a>

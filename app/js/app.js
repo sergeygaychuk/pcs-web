@@ -4,6 +4,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('pcs', [
   'ngRoute',
+  'checklist-model',
   'pcs.filters',
   'pcs.services',
   'pcs.directives',

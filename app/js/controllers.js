@@ -272,9 +272,16 @@ angular.module('pcs.controllers', [])
           });
         };
     }])
-    .controller('OrganizationsCtrl', ['$scope', '$location', 'Organization', '$routeParams',
-      function($scope, $location, Organization, $routeParams) {
+    .controller('OrganizationsCtrl', ['$scope', '$location', 'Organization', '$routeParams', '$q',
+      function($scope, $location, Organization, $routeParams, $q) {
         var page = Number($location.search().page) || 1;
+        var fillOrganizations = function() {
+          $scope.organizations = Organization.query({page: page}, function () {
+            var len = $scope.organizations.length - 1;
+            var count = $scope.organizations.splice(len)[0].count;
+            $scope.orgPage(page, 25, count);
+          });
+        };
         $scope.orgPager = {
           first: 0,
           last: 0,
@@ -282,6 +289,7 @@ angular.module('pcs.controllers', [])
           page: 1,
           show: false
         };
+        $scope.selected = [];
         $scope.orgPage = function (page, perPage, count) {
           $scope.orgPager.count = count;
           if (count) {
@@ -308,13 +316,15 @@ angular.module('pcs.controllers', [])
           $location.search({});
           $location.path('/users/' + $routeParams.userId + '/organizations/new');
         };
+        $scope.destroyOrganization = function() {
+          var promises = $scope.selected.map(function(organization) {
+            return organization.$remove();
+          });
+          $q.all(promises).then(fillOrganizations);
+        };
         $scope.$watch("operator._id", function(id) {
           if (id && id.toString() == $routeParams.userId) {
-            $scope.organizations = Organization.query({page: page}, function () {
-              var len = $scope.organizations.length - 1;
-              var count = $scope.organizations.splice(len)[0].count;
-              $scope.orgPage(page, 25, count);
-            });
+            fillOrganizations();
           }
         });
     }]);
